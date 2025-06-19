@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storyboard Creation | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 4: Storyboard & Image Generation</p>
+        </div>
+        
+        <!-- API Usage Stats -->
+        <div class="fixed top-4 right-4 z-10 flex space-x-3">
+            <div class="bg-gray-800 px-4 py-2 rounded-full shadow-lg flex items-center">
+                <span class="text-primary-300 font-medium mr-2">Claude:</span>
+                <span id="claudeTokens" class="text-white">0 tokens</span>
+            </div>
+            <div class="bg-gray-800 px-4 py-2 rounded-full shadow-lg flex items-center">
+                <span class="text-green-400 font-medium mr-2">DALL·E:</span>
+                <span id="dalleCredits" class="text-white">0 credits</span>
+            </div>
+        </div>
+        
+        <!-- Meditation Preview Panel -->
+        <section class="bg-gray-800 rounded-xl p-5 shadow-lg flex items-center mb-8">
+            <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-spa text-white text-xl"></i>
+            </div>
+            <div class="flex-grow">
+                <h2 id="meditationTitle" class="text-xl font-semibold">Peaceful Mountain Meditation</h2>
+                <div class="flex flex-wrap items-center text-sm text-gray-400 mt-1">
+                    <span id="meditationLength" class="flex items-center mr-4">
+                        <i class="far fa-clock mr-1"></i> 15 minutes
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-music mr-1"></i> 
+                        <span id="trackCount">3</span> tracks
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-microphone-alt mr-1"></i> 
+                        <span id="wordCount">1,245</span> words
+                    </span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Storyboard Generator -->
+        <div class="space-y-8">
+            <!-- Storyboard Controls -->
+            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <h2 class="text-2xl font-semibold">Storyboard Creation</h2>
+                    
+                    <div class="flex space-x-3">
+                        <button id="regenerateAllBtn" class="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-sync"></i>
+                            <span>Regenerate All</span>
+                        </button>
+                        
+                        <div class="relative group">
+                            <button id="aiStyleBtn" class="flex items-center space-x-2 bg-primary-600 hover:bg-primary-500 text-white px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-magic"></i>
+                                <span>AI Style</span>
+                                <i class="fas fa-chevron-down ml-1"></i>
+                            </button>
+                            
+                            <div id="styleDropdown" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 hidden group-focus-within:block">
+                                <div class="p-2 space-y-1">
+                                    <button class="style-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="photorealistic">Photorealistic</button>
+                                    <button class="style-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="watercolor">Watercolor Painting</button>
+                                    <button class="style-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="digital-art">Digital Art</button>
+                                    <button class="style-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="studio-ghibli">Studio Ghibli</button>
+                                    <button class="style-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="mystical">Mystical & Ethereal</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-400 mb-4">
+                    <p>Claude has analyzed your meditation transcript and created a storyboard with images for each segment. You can edit the prompts and regenerate individual images.</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div id="generationProgress" class="mb-4">
+                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                        <span>Generating storyboard scenes...</span>
+                        <span id="progressText">1/8</span>
+                    </div>
+                    <div class="bg-gray-700 h-2 rounded-full overflow-hidden">
+                        <div id="progressBar" class="bg-primary-500 h-full rounded-full transition-all duration-300" style="width: 12.5%"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Storyboard Grid -->
+            <div id="storyboardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Scene cards will be generated by JavaScript -->
+                <!-- Loading placeholders -->
+                <div class="scene-card bg-gray-800 rounded-xl overflow-hidden shadow-lg animate-pulse">
+                    <div class="h-48 bg-gray-700"></div>
+                    <div class="p-4 space-y-3">
+                        <div class="h-4 bg-gray-700 rounded w-1/4"></div>
+                        <div class="h-3 bg-gray-700 rounded w-3/4"></div>
+                        <div class="h-3 bg-gray-700 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div class="scene-card bg-gray-800 rounded-xl overflow-hidden shadow-lg animate-pulse">
+                    <div class="h-48 bg-gray-700"></div>
+                    <div class="p-4 space-y-3">
+                        <div class="h-4 bg-gray-700 rounded w-1/3"></div>
+                        <div class="h-3 bg-gray-700 rounded w-2/3"></div>
+                        <div class="h-3 bg-gray-700 rounded w-3/5"></div>
+                    </div>
+                </div>
+                <div class="scene-card bg-gray-800 rounded-xl overflow-hidden shadow-lg animate-pulse">
+                    <div class="h-48 bg-gray-700"></div>
+                    <div class="p-4 space-y-3">
+                        <div class="h-4 bg-gray-700 rounded w-2/5"></div>
+                        <div class="h-3 bg-gray-700 rounded w-3/4"></div>
+                        <div class="h-3 bg-gray-700 rounded w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Prompt Editor Modal -->
+            <div id="promptModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center">
+                <div class="bg-gray-800 rounded-xl max-w-2xl w-full mx-4 shadow-2xl">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Edit Image Prompt</h3>
+                            <button id="closeModal" class="text-gray-400 hover:text-white">
+                                <i class="fas fa-times text-lg"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400 mb-1">Scene Number</label>
+                                <div id="modalSceneNumber" class="text-lg">Scene 1</div>
+                            </div>
+                            
+                            <div>
+                                <label for="modalPrompt" class="block text-sm font-medium text-gray-400 mb-1">Image Prompt</label>
+                                <textarea id="modalPrompt" rows="5" class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"></textarea>
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button id="cancelPromptEdit" class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
+                                    Cancel
+                                </button>
+                                <button id="savePromptEdit" class="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 transition-colors">
+                                    Save & Regenerate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <a href="music.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </a>
+                <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
+                    Create Videos <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 4,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                dalle_credits_used: 0,
+                selected_music: [],
+                ai_style: 'photorealistic',
+                storyboard: []
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').textContent = sessionState.meditation_title;
+                    document.getElementById('meditationLength').innerHTML = `<i class="far fa-clock mr-1"></i> ${sessionState.length_minutes} minutes`;
+                    
+                    // Calculate word count if transcript exists
+                    if (sessionState.transcript) {
+                        const wordCount = sessionState.transcript.trim().split(/\s+/).length;
+                        document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+                    }
+                    
+                    // Update track count
+                    if (sessionState.selected_music) {
+                        document.getElementById('trackCount').textContent = sessionState.selected_music.length;
+                    }
+                    
+                    // Update API usage counters
+                    document.getElementById('claudeTokens').textContent = `${sessionState.claude_tokens_used.toLocaleString()} tokens`;
+                    document.getElementById('dalleCredits').textContent = `${sessionState.dalle_credits_used} credits`;
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Sample scenes to generate for storyboard
+            const sampleScenes = [
+                {
+                    id: 1,
+                    title: "Introduction",
+                    transcript: "Welcome to this Peaceful Mountain Meditation. In the next 15 minutes, we'll focus on finding inner calm through connection with nature. Find a comfortable position, either sitting or lying down, where you can be relaxed yet alert.",
+                    imagePrompt: "A serene mountain landscape at dawn with soft purple and blue hues. The sky transitions from deep indigo to light lavender as the sun rises, creating a peaceful atmosphere. Gentle mist hovers over verdant valleys, while distant peaks are silhouetted against the brightening sky."
+                },
+                {
+                    id: 2,
+                    title: "Breathing Focus",
+                    transcript: "Let's begin by bringing awareness to your breath. Take a deep breath in through your nose... and exhale slowly through your mouth. Again, breathe in deeply... and exhale completely. With each breath, feel yourself becoming more and more relaxed.",
+                    imagePrompt: "A close-up view of a peaceful mountain stream flowing gently over smooth stones. Sunlight filters through nearby trees, creating dancing patterns on the clear water. Small ripples in the water represent the rhythm of breathing, with a sense of flow and gentle movement."
+                },
+                {
+                    id: 3,
+                    title: "Body Awareness",
+                    transcript: "Now, bring your attention to your body. Notice where you're making contact with the surface beneath you. Feel the weight of your body being supported. Allow any areas of tension to soften with each exhale.",
+                    imagePrompt: "A person seated in meditation on a natural rock formation overlooking a vast mountain range. Their body appears relaxed yet poised, with soft light illuminating their silhouette. The surrounding nature embraces the figure, suggesting harmony between body and environment."
+                },
+                {
+                    id: 4,
+                    title: "Mountain Visualization",
+                    transcript: "Imagine yourself sitting on a mountain peak. The air is crisp and clean. You can see for miles in every direction. Below you are lush forests, meadows dotted with wildflowers, and a winding river that catches the light of the sun.",
+                    imagePrompt: "A panoramic view from a mountain summit showing a breathtaking landscape with forests, meadows of colorful wildflowers, and a silver river winding through the valley below. The perspective is from above, with a sense of expansiveness and clarity. The lighting suggests early morning with golden sunlight washing over the scene."
+                },
+                {
+                    id: 5,
+                    title: "Inner Stability",
+                    transcript: "Like a mountain, you have an inner stability that remains constant despite the changing weather of your thoughts and emotions. Feel this steadiness within you, this unwavering presence.",
+                    imagePrompt: "A majestic mountain standing firm amidst changing weather conditions. One side shows sunshine and clear skies, while clouds and gentle rain approach from the other side. The mountain remains unmoved and solid, symbolizing inner stability amid changing conditions. The image has a timeless, eternal quality."
+                },
+                {
+                    id: 6,
+                    title: "Connecting with Nature",
+                    transcript: "With each breath, feel yourself becoming more connected to the natural world around you. You are part of this vast ecosystem, this web of life. There is wisdom in this connection, a deep knowing beyond words.",
+                    imagePrompt: "A person sitting in meditation with subtle visual elements showing connection to nature - small glowing threads of light connecting the meditator to surrounding plants, animals, and landscape elements. The scene is set in a mountain meadow with diverse flora and small wildlife. A soft, ethereal glow emanates from the connection points."
+                },
+                {
+                    id: 7,
+                    title: "Expanding Awareness",
+                    transcript: "Gently expand your awareness to include all the sounds around you. Notice them without judgment or analysis. Just as the mountain witnesses all that happens around it without reaction, observe the present moment with the same equanimity.",
+                    imagePrompt: "A mountain scene with visible sound waves rippling through the air, represented as delicate, colorful lines. Birds fly overhead, a stream bubbles nearby, and wind moves through trees - all creating visible patterns of sound in the air. The scene has a magical quality where sound is visualized in harmony with the landscape."
+                },
+                {
+                    id: 8,
+                    title: "Closing Reflection",
+                    transcript: "As we prepare to close this meditation, take a moment to appreciate the peace you've cultivated. Know that like the mountain, this steadiness is always available to you. When you're ready, gently bring movement back to your body and open your eyes, carrying this mountain strength with you.",
+                    imagePrompt: "A person opening their eyes after meditation, with a subtle transparent overlay showing a mountain silhouette within their body. The scene is bathed in warm sunset light, suggesting completion and transition. The expression on the person's face shows calm awareness and inner peace, with a slight smile of contentment."
+                }
+            ];
+            
+            // Initialize storyboard from session or create new one
+            function initializeStoryboard() {
+                // Check if we already have a storyboard in the session
+                if (sessionState.storyboard && sessionState.storyboard.length > 0) {
+                    // Clear loading placeholders
+                    document.getElementById('storyboardGrid').innerHTML = '';
+                    
+                    // Render saved storyboard
+                    sessionState.storyboard.forEach(scene => {
+                        addSceneCard(scene);
+                    });
+                    
+                    // Hide progress bar
+                    document.getElementById('generationProgress').classList.add('hidden');
+                } else {
+                    // Start generating new storyboard
+                    generateStoryboard();
+                }
+            }
+            
+            // Generate storyboard from transcript
+            function generateStoryboard() {
+                // In a real app, this would call Claude API to analyze the transcript
+                // and generate scene descriptions and image prompts
+                
+                // For demo, use sample scenes
+                const totalScenes = sampleScenes.length;
+                let currentScene = 0;
+                
+                // Clear storyboard grid
+                document.getElementById('storyboardGrid').innerHTML = '';
+                
+                // Update progress bar
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressText').textContent = `0/${totalScenes}`;
+                
+                // Show progress bar
+                document.getElementById('generationProgress').classList.remove('hidden');
+                
+                // Generate scenes with a delay to simulate API calls
+                const generateScene = () => {
+                    if (currentScene < totalScenes) {
+                        // Get next scene
+                        const scene = sampleScenes[currentScene];
+                        
+                        // Generate image
+                        generateImage(scene, currentScene, () => {
+                            // Update progress
+                            currentScene++;
+                            const progress = (currentScene / totalScenes) * 100;
+                            document.getElementById('progressBar').style.width = `${progress}%`;
+                            document.getElementById('progressText').textContent = `${currentScene}/${totalScenes}`;
+                            
+                            // Continue with next scene
+                            setTimeout(generateScene, 1000);
+                        });
+                    } else {
+                        // All scenes generated
+                        document.getElementById('generationProgress').classList.add('hidden');
+                        
+                        // Update session state
+                        localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                        updateDebugOutput();
+                    }
+                };
+                
+                // Start generation process
+                setTimeout(generateScene, 1000);
+            }
+            
+            // Generate image for a scene
+            function generateImage(scene, index, callback) {
+                // In a real app, this would call DALL-E API with the image prompt
+                // For demo, simulate with a timeout and placeholder images
+                
+                // Create scene object with placeholder image URL
+                const sceneObject = {
+                    id: scene.id,
+                    title: scene.title,
+                    transcript: scene.transcript,
+                    imagePrompt: scene.imagePrompt,
+                    imageUrl: `https://picsum.photos/seed/${scene.id}/800/450`
+                };
+                
+                // Add to session state
+                if (!sessionState.storyboard) {
+                    sessionState.storyboard = [];
+                }
+                
+                sessionState.storyboard[index] = sceneObject;
+                
+                // Add scene card to grid
+                addSceneCard(sceneObject);
+                
+                // Update DALL-E credits usage
+                sessionState.dalle_credits_used += 1;
+                document.getElementById('dalleCredits').textContent = `${sessionState.dalle_credits_used} credits`;
+                
+                // Call callback after "generating" image
+                setTimeout(callback, 500);
+            }
+            
+            // Add a scene card to the storyboard grid
+            function addSceneCard(scene) {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'scene-card bg-gray-800 rounded-xl overflow-hidden shadow-lg';
+                cardEl.dataset.id = scene.id;
+                
+                cardEl.innerHTML = `
+                    <div class="relative h-48 bg-gray-700 overflow-hidden">
+                        <img src="${scene.imageUrl}" alt="${scene.title}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 left-2 bg-gray-900/70 text-white text-xs px-2 py-1 rounded">
+                            Scene ${scene.id}
+                        </div>
+                        <button class="edit-prompt-btn absolute bottom-2 right-2 bg-gray-900/70 hover:bg-gray-800 text-white p-2 rounded-full transition-colors">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button class="regenerate-btn absolute bottom-2 left-2 bg-gray-900/70 hover:bg-gray-800 text-white p-2 rounded-full transition-colors">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-lg mb-2">${scene.title}</h3>
+                        <p class="text-gray-400 text-sm line-clamp-3">${scene.transcript}</p>
+                        <div class="mt-3">
+                            <div class="text-xs text-gray-500 mb-1">Image Prompt:</div>
+                            <p class="text-gray-400 text-xs line-clamp-2">${scene.imagePrompt}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to grid
+                document.getElementById('storyboardGrid').appendChild(cardEl);
+                
+                // Add event listeners
+                const editBtn = cardEl.querySelector('.edit-prompt-btn');
+                editBtn.addEventListener('click', () => {
+                    openPromptEditor(scene);
+                });
+                
+                const regenerateBtn = cardEl.querySelector('.regenerate-btn');
+                regenerateBtn.addEventListener('click', () => {
+                    regenerateImage(scene.id);
+                });
+            }
+            
+            // Open the prompt editor modal
+            function openPromptEditor(scene) {
+                const modal = document.getElementById('promptModal');
+                const modalSceneNumber = document.getElementById('modalSceneNumber');
+                const modalPrompt = document.getElementById('modalPrompt');
+                
+                // Set modal content
+                modalSceneNumber.textContent = `Scene ${scene.id}`;
+                modalPrompt.value = scene.imagePrompt;
+                modalPrompt.dataset.sceneId = scene.id;
+                
+                // Show modal
+                modal.classList.remove('hidden');
+            }
+            
+            // Close the prompt editor modal
+            function closePromptModal() {
+                const modal = document.getElementById('promptModal');
+                modal.classList.add('hidden');
+            }
+            
+            // Save prompt edit and regenerate image
+            function savePromptEdit() {
+                const modalPrompt = document.getElementById('modalPrompt');
+                const sceneId = parseInt(modalPrompt.dataset.sceneId);
+                const newPrompt = modalPrompt.value;
+                
+                // Update scene in session state
+                const sceneIndex = sessionState.storyboard.findIndex(s => s.id === sceneId);
+                if (sceneIndex !== -1) {
+                    sessionState.storyboard[sceneIndex].imagePrompt = newPrompt;
+                    
+                    // Close modal
+                    closePromptModal();
+                    
+                    // Regenerate image
+                    regenerateImage(sceneId);
+                }
+            }
+            
+            // Regenerate image for a scene
+            function regenerateImage(sceneId) {
+                // Find scene in session state
+                const sceneIndex = sessionState.storyboard.findIndex(s => s.id === sceneId);
+                if (sceneIndex === -1) return;
+                
+                const scene = sessionState.storyboard[sceneIndex];
+                
+                // Find scene card
+                const sceneCard = document.querySelector(`.scene-card[data-id="${sceneId}"]`);
+                if (!sceneCard) return;
+                
+                // Update image to loading state
+                const imgElement = sceneCard.querySelector('img');
+                const originalSrc = imgElement.src;
+                imgElement.src = 'https://via.placeholder.com/800x450/374151/FFFFFF?text=Generating...';
+                
+                // Add loading spinner to regenerate button
+                const regenerateBtn = sceneCard.querySelector('.regenerate-btn');
+                regenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                regenerateBtn.disabled = true;
+                
+                // In a real app, this would call DALL-E API with the image prompt
+                // For demo, simulate with a timeout and a different placeholder image
+                setTimeout(() => {
+                    // Generate new random image (in a real app, this would be the DALL-E response)
+                    const newImageUrl = `https://picsum.photos/seed/${sceneId}-${Date.now()}/800/450`;
+                    
+                    // Update image
+                    imgElement.src = newImageUrl;
+                    
+                    // Update scene in session state
+                    sessionState.storyboard[sceneIndex].imageUrl = newImageUrl;
+                    
+                    // Update DALL-E credits usage
+                    sessionState.dalle_credits_used += 1;
+                    document.getElementById('dalleCredits').textContent = `${sessionState.dalle_credits_used} credits`;
+                    
+                    // Update session storage
+                    localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                    updateDebugOutput();
+                    
+                    // Reset regenerate button
+                    regenerateBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                    regenerateBtn.disabled = false;
+                }, 2000);
+            }
+            
+            // Regenerate all images with selected style
+            function regenerateAllImages() {
+                // Confirm with user
+                if (!confirm('Regenerate all images? This will use DALL-E credits for each image.')) {
+                    return;
+                }
+                
+                // Get all scene cards
+                const sceneCards = document.querySelectorAll('.scene-card');
+                
+                // Start progress tracking
+                document.getElementById('generationProgress').classList.remove('hidden');
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressText').textContent = `0/${sceneCards.length}`;
+                
+                // Track progress
+                let completedCount = 0;
+                
+                // Process each scene
+                sceneCards.forEach((card) => {
+                    const sceneId = parseInt(card.dataset.id);
+                    
+                    // Find scene in session state
+                    const sceneIndex = sessionState.storyboard.findIndex(s => s.id === sceneId);
+                    if (sceneIndex === -1) return;
+                    
+                    // Update image to loading state
+                    const imgElement = card.querySelector('img');
+                    imgElement.src = 'https://via.placeholder.com/800x450/374151/FFFFFF?text=Generating...';
+                    
+                    // In a real app, this would call DALL-E API with the image prompt
+                    // For demo, simulate with a timeout and a different placeholder image
+                    setTimeout(() => {
+                        // Generate new random image
+                        const newImageUrl = `https://picsum.photos/seed/${sceneId}-style-${sessionState.ai_style}-${Date.now()}/800/450`;
+                        
+                        // Update image
+                        imgElement.src = newImageUrl;
+                        
+                        // Update scene in session state
+                        sessionState.storyboard[sceneIndex].imageUrl = newImageUrl;
+                        
+                        // Update DALL-E credits usage
+                        sessionState.dalle_credits_used += 1;
+                        document.getElementById('dalleCredits').textContent = `${sessionState.dalle_credits_used} credits`;
+                        
+                        // Update progress
+                        completedCount++;
+                        const progress = (completedCount / sceneCards.length) * 100;
+                        document.getElementById('progressBar').style.width = `${progress}%`;
+                        document.getElementById('progressText').textContent = `${completedCount}/${sceneCards.length}`;
+                        
+                        // Check if all done
+                        if (completedCount === sceneCards.length) {
+                            // Hide progress bar
+                            setTimeout(() => {
+                                document.getElementById('generationProgress').classList.add('hidden');
+                            }, 1000);
+                            
+                            // Update session storage
+                            localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                            updateDebugOutput();
+                        }
+                    }, 1000 + Math.random() * 2000); // Stagger the regeneration
+                });
+            }
+            
+            // Change AI style
+            function changeAIStyle(style) {
+                // Update session state
+                sessionState.ai_style = style;
+                
+                // Close dropdown
+                document.getElementById('styleDropdown').classList.add('hidden');
+                
+                // Update button text
+                const styleNames = {
+                    'photorealistic': 'Photorealistic',
+                    'watercolor': 'Watercolor',
+                    'digital-art': 'Digital Art',
+                    'studio-ghibli': 'Studio Ghibli',
+                    'mystical': 'Mystical'
+                };
+                
+                document.getElementById('aiStyleBtn').innerHTML = `
+                    <i class="fas fa-magic"></i>
+                    <span>${styleNames[style] || 'AI Style'}</span>
+                    <i class="fas fa-chevron-down ml-1"></i>
+                `;
+                
+                // Ask to regenerate all images
+                if (confirm(`Apply ${styleNames[style]} style to all images? This will regenerate all images.`)) {
+                    regenerateAllImages();
+                }
+            }
+            
+            // Event Listeners
+            
+            // Close modal buttons
+            document.getElementById('closeModal').addEventListener('click', closePromptModal);
+            document.getElementById('cancelPromptEdit').addEventListener('click', closePromptModal);
+            
+            // Save prompt edit
+            document.getElementById('savePromptEdit').addEventListener('click', savePromptEdit);
+            
+            // Regenerate all button
+            document.getElementById('regenerateAllBtn').addEventListener('click', regenerateAllImages);
+            
+            // Style dropdown toggle
+            document.getElementById('aiStyleBtn').addEventListener('click', function() {
+                document.getElementById('styleDropdown').classList.toggle('hidden');
+            });
+            
+            // Style options
+            document.querySelectorAll('.style-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    changeAIStyle(this.dataset.style);
+                });
+            });
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // Validate that we have a storyboard
+                if (!sessionState.storyboard || sessionState.storyboard.length === 0) {
+                    alert('Please generate a storyboard before proceeding.');
+                    return;
+                }
+                
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to video generation...');
+                // window.location.href = 'video.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    // Don't show the full image URLs to keep the debug output readable
+                    const debugData = {...sessionState};
+                    if (debugData.storyboard) {
+                        debugData.storyboard = debugData.storyboard.map(scene => ({
+                            ...scene,
+                            imageUrl: '...' // Truncate image URLs
+                        }));
+                    }
+                    jsonOutput.textContent = JSON.stringify(debugData, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Initialize the page
+            initializeStoryboard();
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                const styleDropdown = document.getElementById('styleDropdown');
+                const aiStyleBtn = document.getElementById('aiStyleBtn');
+                
+                if (!aiStyleBtn.contains(event.target) && !styleDropdown.contains(event.target)) {
+                    styleDropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

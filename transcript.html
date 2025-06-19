@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcript Generator | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 2: Transcript Generation</p>
+        </div>
+        
+        <!-- Claude Cost Counter -->
+        <div class="fixed top-4 right-4 bg-gray-800 px-4 py-2 rounded-full shadow-lg">
+            <span class="text-primary-300 font-medium">Claude API: </span>
+            <span id="tokenCounter" class="text-white">0 tokens</span>
+        </div>
+        
+        <!-- Step 2: Transcript Generation & Approval -->
+        <div class="space-y-8">
+            <!-- Meditation Details Panel -->
+            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column - Title & Theme -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="meditationTitle" class="block text-sm font-medium text-gray-400 mb-1">Meditation Title</label>
+                            <input type="text" id="meditationTitle" class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        </div>
+                        
+                        <div>
+                            <label for="themeDescription" class="block text-sm font-medium text-gray-400 mb-1">Meditation Theme</label>
+                            <textarea id="themeDescription" rows="2" class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"></textarea>
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium text-gray-400">Length:</span>
+                                <span id="meditationLength" class="text-white font-medium">15 minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Visual Theme Preview -->
+                    <div class="h-48 md:h-full bg-gray-700 rounded-lg overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-b from-purple-900/60 to-indigo-900/60"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <p id="visualThemeText" class="text-sm text-white/80 italic">A serene mountain landscape at dawn with soft purple and blue hues...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Transcript Generation Panel -->
+            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Meditation Transcript</h2>
+                    <button id="regenerateBtn" class="text-primary-400 hover:text-primary-300 flex items-center space-x-2 py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-sync"></i>
+                        <span>Regenerate</span>
+                    </button>
+                </div>
+                
+                <!-- Transcript Editor -->
+                <div class="space-y-4">
+                    <div class="bg-gray-700 rounded-lg p-4 relative" id="transcriptContainer">
+                        <div id="generatingIndicator" class="absolute inset-0 flex items-center justify-center bg-gray-700/90 rounded-lg">
+                            <div class="text-center">
+                                <i class="fas fa-spinner fa-spin text-3xl text-primary-500 mb-4"></i>
+                                <p class="text-white font-medium">Claude is generating your meditation transcript...</p>
+                                <p class="text-gray-400 text-sm mt-2">This may take a minute</p>
+                            </div>
+                        </div>
+                        
+                        <textarea id="transcriptText" rows="15" class="w-full bg-transparent text-white focus:outline-none" placeholder="Your meditation transcript will appear here..."></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <span id="transcriptInfo" class="text-sm text-gray-400">Approximately <span id="wordCount">0</span> words (~<span id="speechTime">0</span> minutes)</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </a>
+                <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
+                    Choose Music <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 2,
+                meditation_title: '',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').value = sessionState.meditation_title;
+                    document.getElementById('themeDescription').value = sessionState.theme;
+                    document.getElementById('meditationLength').textContent = sessionState.length_minutes + ' minutes';
+                    document.getElementById('visualThemeText').textContent = truncateText(sessionState.visual_theme_description, 120);
+                    
+                    // Update token counter if any already used
+                    updateTokenCounter(sessionState.claude_tokens_used || 0);
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            } else {
+                // No saved session, redirect to step 1
+                window.location.href = 'index.html';
+            }
+            
+            // Helper to truncate text with ellipsis
+            function truncateText(text, maxLength) {
+                if (!text) return '';
+                return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+            }
+            
+            // Update the token counter display
+            function updateTokenCounter(tokens) {
+                document.getElementById('tokenCounter').textContent = tokens.toLocaleString() + ' tokens';
+                sessionState.claude_tokens_used = tokens;
+                updateDebugOutput();
+            }
+            
+            // Generate transcript using Claude API
+            function generateTranscript() {
+                // Show generating indicator
+                document.getElementById('generatingIndicator').classList.remove('hidden');
+                
+                // In a real app, this would call the Claude API
+                // For demo, just simulate with a timeout and sample response
+                setTimeout(() => {
+                    // Simulate API response
+                    const transcript = generateSampleTranscript(
+                        sessionState.meditation_title,
+                        sessionState.theme,
+                        sessionState.length_minutes
+                    );
+                    
+                    // Update textarea
+                    document.getElementById('transcriptText').value = transcript;
+                    
+                    // Update word count and speech time
+                    updateWordCount(transcript);
+                    
+                    // Hide generating indicator
+                    document.getElementById('generatingIndicator').classList.add('hidden');
+                    
+                    // Simulate token usage (in a real app, this would come from the API response)
+                    const tokensUsed = Math.floor(transcript.length * 1.5);
+                    updateTokenCounter(tokensUsed);
+                    
+                    // Save transcript to session state
+                    sessionState.transcript = transcript;
+                    localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                }, 3000);
+            }
+            
+            // Sample transcript generator based on title, theme and duration
+            function generateSampleTranscript(title, theme, duration) {
+                // This is a placeholder. In a real app, this would be generated by Claude API
+                
+                const intro = `Welcome to this ${title} meditation. In the next ${duration} minutes, we'll focus on ${theme}. Find a comfortable position, either sitting or lying down, where you can be relaxed yet alert.`;
+                
+                const breathingSection = `Let's begin by bringing awareness to your breath. Take a deep breath in through your nose... and exhale slowly through your mouth. Again, breathe in deeply... and exhale completely. With each breath, feel yourself becoming more and more relaxed. Continue this natural rhythm of breath as we proceed.`;
+                
+                const mainGuidance = `As you continue breathing naturally, bring your attention to the present moment. Notice any sensations in your body without judgment. Allow any thoughts to come and go like clouds passing in the sky. Your mind may wander, and that's perfectly normal. When you notice this happening, gently bring your focus back to your breath.`;
+                
+                // Generate more content based on the meditation length
+                let middleContent = '';
+                if (duration >= 10) {
+                    middleContent += `\n\nNow, imagine a soft, warm light beginning to fill your body with each inhale. This light represents pure relaxation and peace. With each exhale, imagine releasing any tension or discomfort. The light grows stronger with each breath, washing away stress and bringing deep calm.\n\n`;
+                }
+                
+                if (duration >= 15) {
+                    middleContent += `Feel your body becoming heavier and more relaxed with each breath. Notice how your shoulders drop away from your ears. Feel the muscles in your face softening. Allow your jaw to relax. Let go of any tension you might be holding in your hands and fingers. Feel the relaxation spreading to your legs and feet.\n\n`;
+                }
+                
+                if (duration >= 20) {
+                    middleContent += `Now, bring to mind a peaceful place - somewhere real or imagined where you feel completely safe and at ease. It might be by the ocean, in a forest, on a mountain top, or simply in a cozy room. Take some time to notice the details of this place. What do you see? What sounds do you hear? Are there any scents in the air? How does it feel to be here?\n\n`;
+                }
+                
+                if (duration >= 30) {
+                    middleContent += `As you rest in this peaceful place, reflect on the present moment. Each breath is a new beginning, a fresh start. There is nothing you need to do right now except be. Feel gratitude for this moment of peace you've created for yourself. Recognize your own capacity for finding stillness within.\n\n`;
+                }
+                
+                if (duration >= 45) {
+                    middleContent += `Take some time to set an intention for yourself. What quality would you like to cultivate in your life? Perhaps it's patience, compassion, courage, or joy. Whatever resonates with you, hold this intention gently in your heart. Know that by taking this time for yourself, you're already nurturing this quality.\n\n`;
+                }
+                
+                const closingSection = `In these final moments of our meditation, take a few deeper breaths. Wiggle your fingers and toes, bringing gentle movement back to your body. When you're ready, slowly open your eyes, carrying this sense of peace and awareness with you for the rest of your day.`;
+                
+                return `${intro}\n\n${breathingSection}\n\n${mainGuidance}${middleContent}${closingSection}`;
+            }
+            
+            // Update word count and speech time
+            function updateWordCount(text) {
+                if (!text) {
+                    document.getElementById('wordCount').textContent = '0';
+                    document.getElementById('speechTime').textContent = '0';
+                    return;
+                }
+                
+                const words = text.trim().split(/\s+/).length;
+                document.getElementById('wordCount').textContent = words.toLocaleString();
+                
+                // Estimate speech time (average speaking rate is about 150 words per minute)
+                const speechTimeMinutes = Math.ceil(words / 150);
+                document.getElementById('speechTime').textContent = speechTimeMinutes;
+            }
+            
+            // Update transcript word count when text changes
+            document.getElementById('transcriptText').addEventListener('input', function() {
+                updateWordCount(this.value);
+                sessionState.transcript = this.value;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+            });
+            
+            // Title and theme editable with updates to session state
+            document.getElementById('meditationTitle').addEventListener('input', function() {
+                sessionState.meditation_title = this.value;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            document.getElementById('themeDescription').addEventListener('input', function() {
+                sessionState.theme = this.value;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Regenerate button
+            document.getElementById('regenerateBtn').addEventListener('click', function() {
+                if (confirm('Regenerate the transcript? This will replace your current transcript.')) {
+                    generateTranscript();
+                }
+            });
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // Validate that we have a transcript
+                if (!sessionState.transcript.trim()) {
+                    alert('Please generate a transcript before proceeding.');
+                    return;
+                }
+                
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to music selection...');
+                // window.location.href = 'music.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    jsonOutput.textContent = JSON.stringify(sessionState, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Check if we already have a transcript
+            if (sessionState.transcript) {
+                document.getElementById('transcriptText').value = sessionState.transcript;
+                updateWordCount(sessionState.transcript);
+                document.getElementById('generatingIndicator').classList.add('hidden');
+            } else {
+                // Generate transcript automatically on first load
+                generateTranscript();
+            }
+        });
+    </script>
+</body>
+</html>

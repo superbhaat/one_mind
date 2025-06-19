@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Engineering | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 6: Voice Engineering</p>
+        </div>
+        
+        <!-- API Usage Stats -->
+        <div class="fixed top-4 right-4 z-10 flex space-x-3">
+            <div class="bg-gray-800 px-4 py-2 rounded-full shadow-lg flex items-center">
+                <span class="text-blue-400 font-medium mr-2">ElevenLabs:</span>
+                <span id="elevenCredits" class="text-white">0 credits</span>
+            </div>
+        </div>
+        
+        <!-- Meditation Preview Panel -->
+        <section class="bg-gray-800 rounded-xl p-5 shadow-lg flex items-center mb-8">
+            <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-spa text-white text-xl"></i>
+            </div>
+            <div class="flex-grow">
+                <h2 id="meditationTitle" class="text-xl font-semibold">Peaceful Mountain Meditation</h2>
+                <div class="flex flex-wrap items-center text-sm text-gray-400 mt-1">
+                    <span id="meditationLength" class="flex items-center mr-4">
+                        <i class="far fa-clock mr-1"></i> 15 minutes
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-align-left mr-1"></i> 
+                        <span id="wordCount">1,245</span> words
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-film mr-1"></i> 
+                        <span id="videoLength">3:12</span> runtime
+                    </span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Voice Engineering Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Left Column: Voice Selection & Processing -->
+            <div class="lg:col-span-2 space-y-6">
+                <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-6">Voice Selection & Engineering</h2>
+                    
+                    <!-- Voice Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Select Voice</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="voiceGrid">
+                            <button class="voice-option flex flex-col items-center p-4 rounded-lg bg-primary-600 border-2 border-primary-500" data-voice="serene">
+                                <div class="w-12 h-12 rounded-full bg-primary-700 flex items-center justify-center mb-2">
+                                    <i class="fas fa-user text-primary-300"></i>
+                                </div>
+                                <div class="font-medium">Serene</div>
+                                <div class="text-xs text-primary-300">Soft, calming female</div>
+                            </button>
+                            
+                            <button class="voice-option flex flex-col items-center p-4 rounded-lg bg-gray-700 border-2 border-transparent hover:border-primary-500" data-voice="tranquil">
+                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                <div class="font-medium">Tranquil</div>
+                                <div class="text-xs text-gray-400">Deep, warm male</div>
+                            </button>
+                            
+                            <button class="voice-option flex flex-col items-center p-4 rounded-lg bg-gray-700 border-2 border-transparent hover:border-primary-500" data-voice="harmony">
+                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                <div class="font-medium">Harmony</div>
+                                <div class="text-xs text-gray-400">Balanced, gentle female</div>
+                            </button>
+                            
+                            <button class="voice-option flex flex-col items-center p-4 rounded-lg bg-gray-700 border-2 border-transparent hover:border-primary-500" data-voice="zen">
+                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                <div class="font-medium">Zen</div>
+                                <div class="text-xs text-gray-400">Peaceful, slow male</div>
+                            </button>
+                            
+                            <button class="voice-option flex flex-col items-center p-4 rounded-lg bg-gray-700 border-2 border-transparent hover:border-primary-500" data-voice="custom">
+                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-cloud-upload-alt text-gray-400"></i>
+                                </div>
+                                <div class="font-medium">Custom Voice</div>
+                                <div class="text-xs text-gray-400">Upload your voice</div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Voice Processing Options -->
+                    <div class="space-y-5">
+                        <div>
+                            <label class="flex items-center justify-between text-sm font-medium text-gray-400 mb-2">
+                                <span>Speed Adjustment</span>
+                                <span id="speedValue">92%</span>
+                            </label>
+                            <input type="range" min="80" max="100" value="92" class="w-full accent-primary-500" id="speedSlider">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Slower (80%)</span>
+                                <span>Normal (100%)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="doubleTrack" class="w-4 h-4 accent-primary-500">
+                                <label for="doubleTrack" class="ml-2 text-sm font-medium">Double-track with delay</label>
+                                <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Creates an ethereal reverb effect by duplicating the vocal track with a slight delay"></i>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" id="bassResonance" class="w-4 h-4 accent-primary-500">
+                                <label for="bassResonance" class="ml-2 text-sm font-medium">Add bass resonance</label>
+                                <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Enhances the lower frequencies for a deeper, more grounded sound"></i>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" id="volumeLeveling" class="w-4 h-4 accent-primary-500" checked>
+                                <label for="volumeLeveling" class="ml-2 text-sm font-medium">Volume leveling</label>
+                                <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Automatically balances audio levels for consistent volume throughout"></i>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" id="breathingPauses" class="w-4 h-4 accent-primary-500" checked>
+                                <label for="breathingPauses" class="ml-2 text-sm font-medium">Enhance breathing pauses</label>
+                                <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Slightly extends pauses for breath cues to help listeners follow along"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Audio Generation -->
+                <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-semibold">Voice Generation</h2>
+                        <div class="text-sm text-gray-400">
+                            <span id="estimatedCost">~15 credits</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Generation Status -->
+                    <div id="generationStatus" class="text-center py-8 space-y-4">
+                        <div class="flex justify-center">
+                            <button id="generateVoiceBtn" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-3 rounded-lg transition-colors inline-flex items-center">
+                                <i class="fas fa-microphone-alt mr-2"></i>
+                                <span>Generate Voice Audio</span>
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-400">ElevenLabs will convert your transcript to high-quality narration</p>
+                    </div>
+                    
+                    <!-- Generation Progress (hidden initially) -->
+                    <div id="generationProgress" class="hidden">
+                        <div class="flex justify-between text-sm text-gray-400 mb-2">
+                            <span>Generating audio...</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="bg-gray-700 h-2 rounded-full overflow-hidden mb-4">
+                            <div id="progressBar" class="bg-primary-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <div class="text-center text-sm text-gray-400">
+                            <p id="generationMessage">Preparing transcript for voice synthesis...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Generation Complete (hidden initially) -->
+                    <div id="generationComplete" class="hidden">
+                        <div class="flex items-center justify-center space-x-2 mb-4 text-green-400">
+                            <i class="fas fa-check-circle text-xl"></i>
+                            <span class="font-medium">Voice Generated Successfully</span>
+                        </div>
+                        
+                        <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-audio text-primary-400 mr-2"></i>
+                                    <span class="font-medium">voice_processed.wav</span>
+                                </div>
+                                <span class="text-sm text-gray-400" id="audioDuration">15:24</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button id="playAudioBtn" class="bg-primary-600 hover:bg-primary-500 p-2 rounded-full transition-colors">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="flex-grow relative">
+                                    <div class="absolute inset-0 flex items-center">
+                                        <div class="h-0.5 w-full bg-gray-600 rounded-full overflow-hidden">
+                                            <div id="audioProgress" class="h-full bg-primary-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="0" class="w-full accent-primary-500 opacity-0 cursor-pointer z-10 relative" id="audioSeek">
+                                </div>
+                                <div class="text-sm text-gray-400" id="audioTime">0:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Right Column: Transcript Preview -->
+            <div class="lg:col-span-1">
+                <section class="bg-gray-800 rounded-xl p-6 shadow-lg sticky top-4">
+                    <h2 class="text-2xl font-semibold mb-4">Transcript</h2>
+                    
+                    <div class="h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div id="transcriptPreview" class="text-gray-300 space-y-4 text-sm">
+                            <!-- Transcript will be loaded here -->
+                            <p>Welcome to this Peaceful Mountain Meditation. In the next 15 minutes, we'll focus on finding inner calm through connection with nature. Find a comfortable position, either sitting or lying down, where you can be relaxed yet alert.</p>
+                            
+                            <p>Let's begin by bringing awareness to your breath. Take a deep breath in through your nose... and exhale slowly through your mouth. Again, breathe in deeply... and exhale completely. With each breath, feel yourself becoming more and more relaxed.</p>
+                            
+                            <p>Now, bring your attention to your body. Notice where you're making contact with the surface beneath you. Feel the weight of your body being supported. Allow any areas of tension to soften with each exhale.</p>
+                            
+                            <p>Imagine yourself sitting on a mountain peak. The air is crisp and clean. You can see for miles in every direction. Below you are lush forests, meadows dotted with wildflowers, and a winding river that catches the light of the sun.</p>
+                            
+                            <p>Like a mountain, you have an inner stability that remains constant despite the changing weather of your thoughts and emotions. Feel this steadiness within you, this unwavering presence.</p>
+                            
+                            <p>With each breath, feel yourself becoming more connected to the natural world around you. You are part of this vast ecosystem, this web of life. There is wisdom in this connection, a deep knowing beyond words.</p>
+                            
+                            <p>Gently expand your awareness to include all the sounds around you. Notice them without judgment or analysis. Just as the mountain witnesses all that happens around it without reaction, observe the present moment with the same equanimity.</p>
+                            
+                            <p>As we prepare to close this meditation, take a moment to appreciate the peace you've cultivated. Know that like the mountain, this steadiness is always available to you. When you're ready, gently bring movement back to your body and open your eyes, carrying this mountain strength with you.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+            <a href="video.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+            <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Audio Mixing <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 6,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                dalle_credits_used: 0,
+                runway_credits_used: 0,
+                elevenlabs_credits_used: 0,
+                selected_music: [],
+                ai_style: 'photorealistic',
+                storyboard: [],
+                motion_style: 'gentle',
+                seconds_per_scene: 24,
+                video_segments: [],
+                voice: {
+                    selected_voice: 'serene',
+                    speed_adjustment: 92,
+                    double_track: false,
+                    bass_resonance: false,
+                    volume_leveling: true,
+                    breathing_pauses: true,
+                    audio_url: '',
+                    duration_seconds: 0,
+                    is_generated: false
+                }
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').textContent = sessionState.meditation_title;
+                    document.getElementById('meditationLength').innerHTML = `<i class="far fa-clock mr-1"></i> ${sessionState.length_minutes} minutes`;
+                    
+                    // Calculate word count if transcript exists
+                    if (sessionState.transcript) {
+                        const wordCount = sessionState.transcript.trim().split(/\s+/).length;
+                        document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+                        
+                        // Load transcript into preview
+                        document.getElementById('transcriptPreview').innerHTML = formatTranscriptForDisplay(sessionState.transcript);
+                        
+                        // Update estimated cost (roughly 1 credit per 1000 characters)
+                        const charCount = sessionState.transcript.length;
+                        const estimatedCredits = Math.ceil(charCount / 1000);
+                        document.getElementById('estimatedCost').textContent = `~${estimatedCredits} credits`;
+                    }
+                    
+                    // Update API usage counters
+                    document.getElementById('elevenCredits').textContent = `${sessionState.elevenlabs_credits_used} credits`;
+                    
+                    // Calculate video length if we have scene data
+                    if (sessionState.storyboard && sessionState.seconds_per_scene) {
+                        const totalSeconds = sessionState.storyboard.length * sessionState.seconds_per_scene;
+                        const minutes = Math.floor(totalSeconds / 60);
+                        const seconds = totalSeconds % 60;
+                        document.getElementById('videoLength').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    
+                    // Restore voice settings if they exist
+                    if (sessionState.voice) {
+                        restoreVoiceSettings(sessionState.voice);
+                    }
+                    
+                    // Check if we already have generated audio
+                    if (sessionState.voice && sessionState.voice.is_generated) {
+                        showGenerationComplete();
+                    }
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Format transcript for display
+            function formatTranscriptForDisplay(transcript) {
+                if (!transcript) return '';
+                
+                // Split into paragraphs and wrap each in <p> tags
+                return transcript.split('\n\n')
+                    .filter(para => para.trim() !== '')
+                    .map(para => `<p>${para}</p>`)
+                    .join('\n');
+            }
+            
+            // Restore voice settings from session
+            function restoreVoiceSettings(voiceSettings) {
+                // Select the correct voice option
+                document.querySelectorAll('.voice-option').forEach(option => {
+                    if (option.dataset.voice === voiceSettings.selected_voice) {
+                        selectVoice(option);
+                    }
+                });
+                
+                // Set speed adjustment
+                const speedSlider = document.getElementById('speedSlider');
+                const speedValue = document.getElementById('speedValue');
+                speedSlider.value = voiceSettings.speed_adjustment;
+                speedValue.textContent = `${voiceSettings.speed_adjustment}%`;
+                
+                // Set checkboxes
+                document.getElementById('doubleTrack').checked = voiceSettings.double_track;
+                document.getElementById('bassResonance').checked = voiceSettings.bass_resonance;
+                document.getElementById('volumeLeveling').checked = voiceSettings.volume_leveling;
+                document.getElementById('breathingPauses').checked = voiceSettings.breathing_pauses;
+            }
+            
+            // Select a voice
+            function selectVoice(selectedOption) {
+                // Remove selected class from all options
+                document.querySelectorAll('.voice-option').forEach(option => {
+                    option.classList.remove('bg-primary-600', 'border-primary-500');
+                    option.classList.add('bg-gray-700', 'border-transparent');
+                    
+                    const icon = option.querySelector('i');
+                    icon.classList.remove('text-primary-300');
+                    icon.classList.add('text-gray-400');
+                    
+                    const descText = option.querySelector('.text-xs');
+                    descText.classList.remove('text-primary-300');
+                    descText.classList.add('text-gray-400');
+                    
+                    const bgDiv = option.querySelector('.rounded-full');
+                    bgDiv.classList.remove('bg-primary-700');
+                    bgDiv.classList.add('bg-gray-600');
+                });
+                
+                // Add selected class to chosen option
+                selectedOption.classList.remove('bg-gray-700', 'border-transparent');
+                selectedOption.classList.add('bg-primary-600', 'border-primary-500');
+                
+                const icon = selectedOption.querySelector('i');
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-primary-300');
+                
+                const descText = selectedOption.querySelector('.text-xs');
+                descText.classList.remove('text-gray-400');
+                descText.classList.add('text-primary-300');
+                
+                const bgDiv = selectedOption.querySelector('.rounded-full');
+                bgDiv.classList.remove('bg-gray-600');
+                bgDiv.classList.add('bg-primary-700');
+                
+                // Update session state
+                sessionState.voice.selected_voice = selectedOption.dataset.voice;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            }
+            
+            // Generate voice audio
+            function generateVoiceAudio() {
+                // Show progress UI
+                document.getElementById('generationStatus').classList.add('hidden');
+                document.getElementById('generationProgress').classList.remove('hidden');
+                
+                // Initialize progress
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressPercent').textContent = '0%';
+                document.getElementById('generationMessage').textContent = 'Preparing transcript for voice synthesis...';
+                
+                // In a real app, this would call ElevenLabs API
+                // For demo, simulate the process with timeouts
+                
+                // Step 1: Preparing transcript
+                setTimeout(() => {
+                    document.getElementById('progressBar').style.width = '15%';
+                    document.getElementById('progressPercent').textContent = '15%';
+                    document.getElementById('generationMessage').textContent = 'Processing transcript with natural pauses...';
+                    
+                    // Step 2: Generating raw audio
+                    setTimeout(() => {
+                        document.getElementById('progressBar').style.width = '40%';
+                        document.getElementById('progressPercent').textContent = '40%';
+                        document.getElementById('generationMessage').textContent = 'Generating raw voice audio...';
+                        
+                        // Step 3: Applying voice modifications
+                        setTimeout(() => {
+                            document.getElementById('progressBar').style.width = '70%';
+                            document.getElementById('progressPercent').textContent = '70%';
+                            document.getElementById('generationMessage').textContent = 'Applying voice modifications (speed adjustment, effects)...';
+                            
+                            // Step 4: Finalizing audio
+                            setTimeout(() => {
+                                document.getElementById('progressBar').style.width = '100%';
+                                document.getElementById('progressPercent').textContent = '100%';
+                                document.getElementById('generationMessage').textContent = 'Finalizing audio file...';
+                                
+                                // Complete generation
+                                setTimeout(() => {
+                                    completeGeneration();
+                                }, 1500);
+                            }, 2000);
+                        }, 2500);
+                    }, 2000);
+                }, 1500);
+            }
+            
+            // Complete voice generation
+            function completeGeneration() {
+                // Calculate estimated audio duration based on word count
+                // Average speaking rate is about 150 words per minute
+                let duration = 0;
+                if (sessionState.transcript) {
+                    const wordCount = sessionState.transcript.trim().split(/\s+/).length;
+                    const minutes = wordCount / 150;
+                    duration = Math.ceil(minutes * 60); // convert to seconds
+                    
+                    // Adjust for speed setting
+                    duration = Math.ceil(duration * (100 / sessionState.voice.speed_adjustment));
+                }
+                
+                // Update session state
+                sessionState.voice.is_generated = true;
+                sessionState.voice.audio_url = 'https://example.com/voice_processed.wav'; // In a real app, this would be the actual URL
+                sessionState.voice.duration_seconds = duration;
+                
+                // Update ElevenLabs credits used (roughly 1 credit per 1000 characters)
+                const charCount = sessionState.transcript ? sessionState.transcript.length : 1000;
+                const creditsUsed = Math.ceil(charCount / 1000);
+                sessionState.elevenlabs_credits_used += creditsUsed;
+                document.getElementById('elevenCredits').textContent = `${sessionState.elevenlabs_credits_used} credits`;
+                
+                // Save session state
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+                
+                // Show completion UI
+                showGenerationComplete();
+                
+                // Enable proceed button
+                document.getElementById('proceedBtn').disabled = false;
+            }
+            
+            // Show generation complete UI
+            function showGenerationComplete() {
+                document.getElementById('generationStatus').classList.add('hidden');
+                document.getElementById('generationProgress').classList.add('hidden');
+                document.getElementById('generationComplete').classList.remove('hidden');
+                
+                // Set audio duration
+                if (sessionState.voice && sessionState.voice.duration_seconds) {
+                    const minutes = Math.floor(sessionState.voice.duration_seconds / 60);
+                    const seconds = sessionState.voice.duration_seconds % 60;
+                    document.getElementById('audioDuration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                // Enable proceed button
+                document.getElementById('proceedBtn').disabled = false;
+            }
+            
+            // Toggle audio playback
+            function toggleAudioPlayback() {
+                const playBtn = document.getElementById('playAudioBtn');
+                const isPlaying = playBtn.classList.contains('playing');
+                
+                if (isPlaying) {
+                    // Pause audio
+                    clearInterval(window.audioPlaybackInterval);
+                    playBtn.classList.remove('playing');
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                } else {
+                    // Play audio
+                    playBtn.classList.add('playing');
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    
+                    // Simulate audio playback
+                    let progress = parseInt(document.getElementById('audioSeek').value);
+                    
+                    window.audioPlaybackInterval = setInterval(() => {
+                        if (progress >= 100) {
+                            clearInterval(window.audioPlaybackInterval);
+                            playBtn.classList.remove('playing');
+                            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                            return;
+                        }
+                        
+                        progress += 0.5;
+                        document.getElementById('audioSeek').value = progress;
+                        document.getElementById('audioProgress').style.width = `${progress}%`;
+                        
+                        // Update time display
+                        if (sessionState.voice && sessionState.voice.duration_seconds) {
+                            const currentSeconds = Math.floor((progress / 100) * sessionState.voice.duration_seconds);
+                            const minutes = Math.floor(currentSeconds / 60);
+                            const seconds = currentSeconds % 60;
+                            document.getElementById('audioTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                    }, 100);
+                }
+            }
+            
+            // Update audio seek position
+            function updateAudioSeek() {
+                const value = document.getElementById('audioSeek').value;
+                document.getElementById('audioProgress').style.width = `${value}%`;
+                
+                // Update time display
+                if (sessionState.voice && sessionState.voice.duration_seconds) {
+                    const currentSeconds = Math.floor((value / 100) * sessionState.voice.duration_seconds);
+                    const minutes = Math.floor(currentSeconds / 60);
+                    const seconds = currentSeconds % 60;
+                    document.getElementById('audioTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            // Event Listeners
+            
+            // Voice selection
+            document.querySelectorAll('.voice-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectVoice(this);
+                });
+            });
+            
+            // Speed adjustment slider
+            const speedSlider = document.getElementById('speedSlider');
+            const speedValue = document.getElementById('speedValue');
+            speedSlider.addEventListener('input', function() {
+                speedValue.textContent = `${this.value}%`;
+                sessionState.voice.speed_adjustment = parseInt(this.value);
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Checkbox options
+            document.getElementById('doubleTrack').addEventListener('change', function() {
+                sessionState.voice.double_track = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            document.getElementById('bassResonance').addEventListener('change', function() {
+                sessionState.voice.bass_resonance = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            document.getElementById('volumeLeveling').addEventListener('change', function() {
+                sessionState.voice.volume_leveling = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            document.getElementById('breathingPauses').addEventListener('change', function() {
+                sessionState.voice.breathing_pauses = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Generate voice button
+            document.getElementById('generateVoiceBtn').addEventListener('click', generateVoiceAudio);
+            
+            // Audio playback controls
+            document.getElementById('playAudioBtn').addEventListener('click', toggleAudioPlayback);
+            document.getElementById('audioSeek').addEventListener('input', updateAudioSeek);
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to audio mixing...');
+                // window.location.href = 'mixing.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    // Don't show the full URLs to keep the debug output readable
+                    const debugData = {...sessionState};
+                    if (debugData.storyboard) {
+                        debugData.storyboard = debugData.storyboard.map(scene => ({
+                            ...scene,
+                            imageUrl: '...' // Truncate image URLs
+                        }));
+                    }
+                    if (debugData.video_segments) {
+                        debugData.video_segments = debugData.video_segments.map(segment => ({
+                            ...segment,
+                            video_url: '...' // Truncate video URLs
+                        }));
+                    }
+                    if (debugData.voice && debugData.voice.audio_url) {
+                        debugData.voice = {
+                            ...debugData.voice,
+                            audio_url: '...' // Truncate audio URL
+                        };
+                    }
+                    jsonOutput.textContent = JSON.stringify(debugData, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Add custom scrollbar styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 8px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #374151;
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #4B5563;
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #6B7280;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Mixing | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 7: Audio Mixing</p>
+        </div>
+        
+        <!-- Meditation Preview Panel -->
+        <section class="bg-gray-800 rounded-xl p-5 shadow-lg flex items-center mb-8">
+            <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-spa text-white text-xl"></i>
+            </div>
+            <div class="flex-grow">
+                <h2 id="meditationTitle" class="text-xl font-semibold">Peaceful Mountain Meditation</h2>
+                <div class="flex flex-wrap items-center text-sm text-gray-400 mt-1">
+                    <span id="meditationLength" class="flex items-center mr-4">
+                        <i class="far fa-clock mr-1"></i> 15 minutes
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-music mr-1"></i> 
+                        <span id="trackCount">3</span> music tracks
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-microphone-alt mr-1"></i> 
+                        <span id="voiceStyle">Serene</span> voice
+                    </span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Audio Mixing Panel -->
+        <section class="bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h2 class="text-2xl font-semibold">Audio Mixing</h2>
+                
+                <div class="flex space-x-3">
+                    <button id="mixAudioBtn" class="bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center">
+                        <i class="fas fa-sliders-h mr-2"></i>
+                        <span>Mix Audio</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mixing Options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Left Column: Voice Volume -->
+                <div>
+                    <label class="flex items-center justify-between text-sm font-medium text-gray-400 mb-2">
+                        <span>Voice Volume</span>
+                        <span id="voiceVolumeValue">100%</span>
+                    </label>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-volume-down text-gray-500"></i>
+                        <input type="range" min="50" max="150" value="100" class="flex-grow accent-primary-500" id="voiceVolumeSlider">
+                        <i class="fas fa-volume-up text-gray-500"></i>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Music Volume -->
+                <div>
+                    <label class="flex items-center justify-between text-sm font-medium text-gray-400 mb-2">
+                        <span>Music Volume</span>
+                        <span id="musicVolumeValue">30%</span>
+                    </label>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-volume-down text-gray-500"></i>
+                        <input type="range" min="0" max="100" value="30" class="flex-grow accent-primary-500" id="musicVolumeSlider">
+                        <i class="fas fa-volume-up text-gray-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Options -->
+            <div class="bg-gray-700 rounded-lg p-4 mb-6">
+                <div class="flex items-center mb-3 cursor-pointer" id="advancedToggle">
+                    <i class="fas fa-chevron-right text-xs mr-2 transition-transform" id="advancedChevron"></i>
+                    <h3 class="font-medium">Advanced Options</h3>
+                </div>
+                
+                <div class="hidden space-y-4" id="advancedOptions">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="flex items-center justify-between text-sm font-medium text-gray-400 mb-2">
+                                <span>Music Fade In</span>
+                                <span id="fadeInValue">5 sec</span>
+                            </label>
+                            <input type="range" min="0" max="20" value="5" class="w-full accent-primary-500" id="fadeInSlider">
+                        </div>
+                        
+                        <div>
+                            <label class="flex items-center justify-between text-sm font-medium text-gray-400 mb-2">
+                                <span>Music Fade Out</span>
+                                <span id="fadeOutValue">10 sec</span>
+                            </label>
+                            <input type="range" min="0" max="30" value="10" class="w-full accent-primary-500" id="fadeOutSlider">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="autoducking" class="w-4 h-4 accent-primary-500" checked>
+                            <label for="autoducking" class="ml-2 text-sm font-medium">Automatic ducking</label>
+                            <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Automatically lowers music volume when voice is speaking"></i>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="enhanceClearness" class="w-4 h-4 accent-primary-500" checked>
+                            <label for="enhanceClearness" class="ml-2 text-sm font-medium">Enhance voice clarity</label>
+                            <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help" title="Applies EQ processing to make voice more clear"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mixing Progress -->
+            <div id="mixingProgress" class="hidden">
+                <div class="flex justify-between text-sm text-gray-400 mb-2">
+                    <span>Mixing audio...</span>
+                    <span id="mixingPercent">0%</span>
+                </div>
+                <div class="bg-gray-700 h-2 rounded-full overflow-hidden mb-4">
+                    <div id="mixingProgressBar" class="bg-primary-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="text-center text-sm text-gray-400">
+                    <p id="mixingMessage">Preparing audio files...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Audio Preview Section -->
+        <section id="audioPreviewSection" class="bg-gray-800 rounded-xl p-6 shadow-lg mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-6">Preview Your Meditation Audio</h2>
+            
+            <!-- Version Tabs -->
+            <div class="flex border-b border-gray-700 mb-6">
+                <button class="audio-tab py-3 px-5 focus:outline-none border-b-2 border-primary-500 text-primary-400 font-medium" data-tab="voice-music">
+                    Voice + Music
+                </button>
+                <button class="audio-tab py-3 px-5 focus:outline-none border-b-2 border-transparent hover:text-gray-300 text-gray-400 font-medium" data-tab="voice-only">
+                    Voice Only
+                </button>
+                <button class="audio-tab py-3 px-5 focus:outline-none border-b-2 border-transparent hover:text-gray-300 text-gray-400 font-medium" data-tab="music-only">
+                    Music Only
+                </button>
+            </div>
+            
+            <!-- Audio Player -->
+            <div class="space-y-6">
+                <div class="flex items-center space-x-4">
+                    <button id="playBtn" class="w-12 h-12 rounded-full bg-primary-600 hover:bg-primary-500 flex items-center justify-center transition-colors text-lg">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    
+                    <div class="flex-grow">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="h-1.5 w-full bg-gray-600 rounded-full overflow-hidden">
+                                    <div id="audioProgress" class="h-full bg-primary-400 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="w-full h-1.5 accent-primary-500 opacity-0 cursor-pointer z-10 relative" id="audioSeek">
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-2">
+                            <span id="currentTime">0:00</span>
+                            <span id="totalTime">15:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-volume-up text-gray-400"></i>
+                        <input type="range" min="0" max="100" value="100" class="w-20 accent-primary-500" id="volumeControl">
+                    </div>
+                </div>
+                
+                <!-- Waveform Display -->
+                <div class="h-24 bg-gray-700 rounded-lg p-2 overflow-hidden">
+                    <div class="flex items-center justify-between h-full" id="waveformDisplay">
+                        <!-- Waveform will be generated by JS -->
+                    </div>
+                </div>
+                
+                <!-- Export Options -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="export-btn bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg transition-colors inline-flex items-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>Download MP3</span>
+                    </button>
+                    
+                    <button class="export-btn bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg transition-colors inline-flex items-center space-x-2">
+                        <i class="fas fa-file-audio"></i>
+                        <span>Download WAV</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+            <a href="voice.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+            <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Final Video <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 7,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                dalle_credits_used: 0,
+                runway_credits_used: 0,
+                elevenlabs_credits_used: 0,
+                selected_music: [],
+                ai_style: 'photorealistic',
+                storyboard: [],
+                motion_style: 'gentle',
+                seconds_per_scene: 24,
+                video_segments: [],
+                voice: {
+                    selected_voice: 'serene',
+                    speed_adjustment: 92,
+                    double_track: false,
+                    bass_resonance: false,
+                    volume_leveling: true,
+                    breathing_pauses: true,
+                    audio_url: '',
+                    duration_seconds: 0,
+                    is_generated: false
+                },
+                audio_mix: {
+                    voice_volume: 100,
+                    music_volume: 30,
+                    fade_in: 5,
+                    fade_out: 10,
+                    autoducking: true,
+                    enhance_clearness: true,
+                    is_mixed: false,
+                    voice_music_url: '',
+                    voice_only_url: '',
+                    music_only_url: ''
+                }
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').textContent = sessionState.meditation_title;
+                    document.getElementById('meditationLength').innerHTML = `<i class="far fa-clock mr-1"></i> ${sessionState.length_minutes} minutes`;
+                    
+                    // Update track count
+                    if (sessionState.selected_music) {
+                        document.getElementById('trackCount').textContent = sessionState.selected_music.length;
+                    }
+                    
+                    // Update voice style
+                    if (sessionState.voice && sessionState.voice.selected_voice) {
+                        const voiceNames = {
+                            'serene': 'Serene',
+                            'tranquil': 'Tranquil',
+                            'harmony': 'Harmony',
+                            'zen': 'Zen',
+                            'custom': 'Custom'
+                        };
+                        document.getElementById('voiceStyle').textContent = voiceNames[sessionState.voice.selected_voice] || 'Default';
+                    }
+                    
+                    // Restore audio mix settings if they exist
+                    if (sessionState.audio_mix) {
+                        restoreAudioMixSettings(sessionState.audio_mix);
+                    }
+                    
+                    // Check if we already have a mixed audio
+                    if (sessionState.audio_mix && sessionState.audio_mix.is_mixed) {
+                        showAudioPreview();
+                    }
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Restore audio mix settings from session
+            function restoreAudioMixSettings(audioMix) {
+                // Set voice volume
+                const voiceVolumeSlider = document.getElementById('voiceVolumeSlider');
+                const voiceVolumeValue = document.getElementById('voiceVolumeValue');
+                voiceVolumeSlider.value = audioMix.voice_volume;
+                voiceVolumeValue.textContent = `${audioMix.voice_volume}%`;
+                
+                // Set music volume
+                const musicVolumeSlider = document.getElementById('musicVolumeSlider');
+                const musicVolumeValue = document.getElementById('musicVolumeValue');
+                musicVolumeSlider.value = audioMix.music_volume;
+                musicVolumeValue.textContent = `${audioMix.music_volume}%`;
+                
+                // Set fade in/out
+                const fadeInSlider = document.getElementById('fadeInSlider');
+                const fadeInValue = document.getElementById('fadeInValue');
+                fadeInSlider.value = audioMix.fade_in;
+                fadeInValue.textContent = `${audioMix.fade_in} sec`;
+                
+                const fadeOutSlider = document.getElementById('fadeOutSlider');
+                const fadeOutValue = document.getElementById('fadeOutValue');
+                fadeOutSlider.value = audioMix.fade_out;
+                fadeOutValue.textContent = `${audioMix.fade_out} sec`;
+                
+                // Set checkboxes
+                document.getElementById('autoducking').checked = audioMix.autoducking;
+                document.getElementById('enhanceClearness').checked = audioMix.enhance_clearness;
+            }
+            
+            // Toggle advanced options
+            document.getElementById('advancedToggle').addEventListener('click', function() {
+                const advancedOptions = document.getElementById('advancedOptions');
+                const chevron = document.getElementById('advancedChevron');
+                
+                advancedOptions.classList.toggle('hidden');
+                chevron.style.transform = advancedOptions.classList.contains('hidden') ? 'rotate(0)' : 'rotate(90deg)';
+            });
+            
+            // Voice volume slider
+            const voiceVolumeSlider = document.getElementById('voiceVolumeSlider');
+            const voiceVolumeValue = document.getElementById('voiceVolumeValue');
+            voiceVolumeSlider.addEventListener('input', function() {
+                voiceVolumeValue.textContent = `${this.value}%`;
+                sessionState.audio_mix.voice_volume = parseInt(this.value);
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Music volume slider
+            const musicVolumeSlider = document.getElementById('musicVolumeSlider');
+            const musicVolumeValue = document.getElementById('musicVolumeValue');
+            musicVolumeSlider.addEventListener('input', function() {
+                musicVolumeValue.textContent = `${this.value}%`;
+                sessionState.audio_mix.music_volume = parseInt(this.value);
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Fade in slider
+            const fadeInSlider = document.getElementById('fadeInSlider');
+            const fadeInValue = document.getElementById('fadeInValue');
+            fadeInSlider.addEventListener('input', function() {
+                fadeInValue.textContent = `${this.value} sec`;
+                sessionState.audio_mix.fade_in = parseInt(this.value);
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Fade out slider
+            const fadeOutSlider = document.getElementById('fadeOutSlider');
+            const fadeOutValue = document.getElementById('fadeOutValue');
+            fadeOutSlider.addEventListener('input', function() {
+                fadeOutValue.textContent = `${this.value} sec`;
+                sessionState.audio_mix.fade_out = parseInt(this.value);
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Checkbox options
+            document.getElementById('autoducking').addEventListener('change', function() {
+                sessionState.audio_mix.autoducking = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            document.getElementById('enhanceClearness').addEventListener('change', function() {
+                sessionState.audio_mix.enhance_clearness = this.checked;
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            });
+            
+            // Mix audio button
+            document.getElementById('mixAudioBtn').addEventListener('click', startAudioMixing);
+            
+            // Start audio mixing process
+            function startAudioMixing() {
+                // Validate that we have voice audio
+                if (!sessionState.voice || !sessionState.voice.is_generated) {
+                    alert('Please generate voice audio first');
+                    return;
+                }
+                
+                // Show mixing progress
+                document.getElementById('mixAudioBtn').disabled = true;
+                document.getElementById('mixAudioBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Mixing...</span>';
+                document.getElementById('mixingProgress').classList.remove('hidden');
+                
+                // Reset progress bar
+                document.getElementById('mixingProgressBar').style.width = '0%';
+                document.getElementById('mixingPercent').textContent = '0%';
+                document.getElementById('mixingMessage').textContent = 'Preparing audio files...';
+                
+                // In a real app, this would call an audio processing service
+                // For demo, simulate with timeouts
+                
+                // Step 1: Preparing
+                setTimeout(() => {
+                    document.getElementById('mixingProgressBar').style.width = '20%';
+                    document.getElementById('mixingPercent').textContent = '20%';
+                    document.getElementById('mixingMessage').textContent = 'Processing voice audio...';
+                    
+                    // Step 2: Processing voice
+                    setTimeout(() => {
+                        document.getElementById('mixingProgressBar').style.width = '40%';
+                        document.getElementById('mixingPercent').textContent = '40%';
+                        document.getElementById('mixingMessage').textContent = 'Processing music tracks...';
+                        
+                        // Step 3: Processing music
+                        setTimeout(() => {
+                            document.getElementById('mixingProgressBar').style.width = '70%';
+                            document.getElementById('mixingPercent').textContent = '70%';
+                            document.getElementById('mixingMessage').textContent = 'Mixing voice and music...';
+                            
+                            // Step 4: Final mixing
+                            setTimeout(() => {
+                                document.getElementById('mixingProgressBar').style.width = '90%';
+                                document.getElementById('mixingPercent').textContent = '90%';
+                                document.getElementById('mixingMessage').textContent = 'Finalizing audio files...';
+                                
+                                // Complete mixing
+                                setTimeout(() => {
+                                    completeMixing();
+                                }, 1500);
+                            }, 2000);
+                        }, 1500);
+                    }, 1500);
+                }, 1000);
+            }
+            
+            // Complete audio mixing
+            function completeMixing() {
+                // Update session state
+                sessionState.audio_mix.is_mixed = true;
+                sessionState.audio_mix.voice_music_url = 'https://example.com/voice_music.mp3';
+                sessionState.audio_mix.voice_only_url = 'https://example.com/voice_only.mp3';
+                sessionState.audio_mix.music_only_url = 'https://example.com/music_only.mp3';
+                
+                // Save session state
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+                
+                // Hide mixing progress
+                document.getElementById('mixingProgress').classList.add('hidden');
+                document.getElementById('mixAudioBtn').innerHTML = '<i class="fas fa-check mr-2"></i><span>Audio Mixed</span>';
+                document.getElementById('mixAudioBtn').className = 'bg-green-600 text-white px-6 py-2 rounded-lg inline-flex items-center cursor-default';
+                
+                // Show audio preview
+                showAudioPreview();
+                
+                // Enable proceed button
+                document.getElementById('proceedBtn').disabled = false;
+            }
+            
+            // Show audio preview section
+            function showAudioPreview() {
+                // Show preview section
+                document.getElementById('audioPreviewSection').classList.remove('hidden');
+                
+                // Generate waveform display
+                generateWaveform();
+                
+                // Set total time display
+                let duration = 900; // Default 15 minutes in seconds
+                if (sessionState.voice && sessionState.voice.duration_seconds) {
+                    duration = sessionState.voice.duration_seconds;
+                }
+                
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                document.getElementById('totalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Initialize audio playback
+                initAudioPlayer();
+            }
+            
+            // Generate waveform display
+            function generateWaveform() {
+                const waveformContainer = document.getElementById('waveformDisplay');
+                waveformContainer.innerHTML = '';
+                
+                // Generate 100 random bars for the waveform
+                for (let i = 0; i < 100; i++) {
+                    const height = Math.floor(Math.random() * 80) + 20; // Random height between 20-100%
+                    const bar = document.createElement('div');
+                    bar.className = 'w-1 mx-0.5 bg-primary-400/80';
+                    bar.style.height = `${height}%`;
+                    waveformContainer.appendChild(bar);
+                }
+            }
+            
+            // Initialize audio player
+            function initAudioPlayer() {
+                const playBtn = document.getElementById('playBtn');
+                const audioSeek = document.getElementById('audioSeek');
+                const volumeControl = document.getElementById('volumeControl');
+                
+                // Set up audio tabs
+                document.querySelectorAll('.audio-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Reset tab styles
+                        document.querySelectorAll('.audio-tab').forEach(t => {
+                            t.classList.remove('border-primary-500', 'text-primary-400');
+                            t.classList.add('border-transparent', 'text-gray-400');
+                        });
+                        
+                        // Highlight active tab
+                        this.classList.remove('border-transparent', 'text-gray-400');
+                        this.classList.add('border-primary-500', 'text-primary-400');
+                        
+                        // Stop playback
+                        stopPlayback();
+                        
+                        // Reset seek
+                        audioSeek.value = 0;
+                        document.getElementById('audioProgress').style.width = '0%';
+                        document.getElementById('currentTime').textContent = '0:00';
+                    });
+                });
+                
+                // Play/pause button
+                playBtn.addEventListener('click', togglePlayback);
+                
+                // Seek control
+                audioSeek.addEventListener('input', function() {
+                    const value = this.value;
+                    document.getElementById('audioProgress').style.width = `${value}%`;
+                    
+                    // Update current time display
+                    updateTimeDisplay(value);
+                });
+                
+                // Volume control
+                volumeControl.addEventListener('input', function() {
+                    // In a real app, this would adjust the audio element volume
+                    console.log('Volume set to', this.value);
+                });
+                
+                // Export buttons
+                document.querySelectorAll('.export-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // In a real app, this would trigger a download
+                        alert('In a real app, this would download the audio file');
+                    });
+                });
+            }
+            
+            // Toggle audio playback
+            function togglePlayback() {
+                const playBtn = document.getElementById('playBtn');
+                const isPlaying = playBtn.classList.contains('playing');
+                
+                if (isPlaying) {
+                    stopPlayback();
+                } else {
+                    startPlayback();
+                }
+            }
+            
+            // Start audio playback
+            function startPlayback() {
+                const playBtn = document.getElementById('playBtn');
+                const audioSeek = document.getElementById('audioSeek');
+                
+                // Update button
+                playBtn.classList.add('playing');
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                
+                // Get current position
+                let progress = parseInt(audioSeek.value);
+                
+                // In a real app, this would play the actual audio
+                // For demo, simulate with interval
+                window.playbackInterval = setInterval(() => {
+                    if (progress >= 100) {
+                        stopPlayback();
+                        return;
+                    }
+                    
+                    progress += 0.5;
+                    audioSeek.value = progress;
+                    document.getElementById('audioProgress').style.width = `${progress}%`;
+                    
+                    // Update time display
+                    updateTimeDisplay(progress);
+                }, 500);
+            }
+            
+            // Stop audio playback
+            function stopPlayback() {
+                const playBtn = document.getElementById('playBtn');
+                
+                // Clear interval if exists
+                if (window.playbackInterval) {
+                    clearInterval(window.playbackInterval);
+                }
+                
+                // Update button
+                playBtn.classList.remove('playing');
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+            
+            // Update time display based on progress percentage
+            function updateTimeDisplay(progressPercent) {
+                let duration = 900; // Default 15 minutes in seconds
+                if (sessionState.voice && sessionState.voice.duration_seconds) {
+                    duration = sessionState.voice.duration_seconds;
+                }
+                
+                const currentSeconds = Math.floor((progressPercent / 100) * duration);
+                const minutes = Math.floor(currentSeconds / 60);
+                const seconds = currentSeconds % 60;
+                document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to final video composition...');
+                // window.location.href = 'final.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    // Don't show the full URLs to keep the debug output readable
+                    const debugData = {...sessionState};
+                    if (debugData.voice) {
+                        debugData.voice = {
+                            ...debugData.voice,
+                            audio_url: debugData.voice.audio_url ? '...' : ''
+                        };
+                    }
+                    if (debugData.audio_mix) {
+                        debugData.audio_mix = {
+                            ...debugData.audio_mix,
+                            voice_music_url: debugData.audio_mix.voice_music_url ? '...' : '',
+                            voice_only_url: debugData.audio_mix.voice_only_url ? '...' : '',
+                            music_only_url: debugData.audio_mix.music_only_url ? '...' : ''
+                        };
+                    }
+                    jsonOutput.textContent = JSON.stringify(debugData, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+        });
+    </script>
+</body>
+</html>

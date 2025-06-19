@@ -33,9 +33,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
     <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Create Your Meditation</h1>
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 1: Meditation Setup</p>
+        </div>
         
+        <!-- Step 1: User Meditation Setup Form -->
         <form id="meditationForm" class="space-y-12">
             <!-- Duration Selection Section -->
             <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
@@ -49,7 +65,7 @@
             <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
                 <h2 class="text-2xl font-semibold mb-4">Meditation Title</h2>
                 <div class="space-y-2">
-                    <input type="text" id="meditationTitle" placeholder="Enter a draft title for your meditation" 
+                    <input type="text" id="meditationTitle" placeholder="Enter a title for your meditation" 
                         class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
                     <p class="text-sm text-gray-400 italic">AI will suggest 3 alternative titles after creation</p>
                 </div>
@@ -59,6 +75,21 @@
             <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
                 <h2 class="text-2xl font-semibold mb-4">Meditation Theme</h2>
                 <div class="space-y-2">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <select id="themeSelector" class="bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">Select a theme (optional)</option>
+                            <option value="Stress Relief">Stress Relief</option>
+                            <option value="Sleep">Sleep & Relaxation</option>
+                            <option value="Focus">Focus & Concentration</option>
+                            <option value="Anxiety">Anxiety Reduction</option>
+                            <option value="Gratitude">Gratitude Practice</option>
+                            <option value="Self-Love">Self-Love & Acceptance</option>
+                            <option value="Mindfulness">Mindfulness & Presence</option>
+                            <option value="Energy">Energy & Motivation</option>
+                            <option value="Healing">Healing & Recovery</option>
+                            <option value="Custom">Custom Theme...</option>
+                        </select>
+                    </div>
                     <textarea id="themeDescription" rows="4" placeholder="Describe the theme and focus of your meditation (e.g., stress relief, gratitude, sleep preparation...)" 
                         class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                         maxlength="500"></textarea>
@@ -86,48 +117,35 @@
                 </div>
             </section>
             
-            <!-- Music Selection Section -->
-            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                <h2 class="text-2xl font-semibold mb-4">Select Background Music</h2>
-                
-                <!-- Search and Filter -->
-                <div class="mb-6 space-y-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search tracks..." 
-                            class="w-full bg-gray-700 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button" class="px-4 py-2 rounded-full bg-primary-600 text-white font-medium">All</button>
-                        <button type="button" class="px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors">Ambient</button>
-                        <button type="button" class="px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors">Nature</button>
-                        <button type="button" class="px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors">Instrumental</button>
-                        <button type="button" class="px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors">Binaural</button>
-                    </div>
-                </div>
-                
-                <!-- Music Tracks -->
-                <div class="space-y-4" id="musicTracks">
-                    <!-- Track items will be generated by JavaScript -->
-                </div>
-            </section>
-            
-            <!-- Submit Button -->
+            <!-- Navigation Buttons -->
             <div class="flex justify-center">
-                <button type="submit" id="submitBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
-                    Create Meditation
+                <button type="button" id="generateTranscriptBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
+                    Generate Transcript
                 </button>
             </div>
         </form>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            const sessionState = {
+                step: 1,
+                meditation_title: '',
+                theme: '',
+                length_minutes: null,
+                visual_theme_description: ''
+            };
+            
             // Generate duration buttons
             const durationGrid = document.getElementById('durationGrid');
             const durations = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
-            let selectedDuration = null;
             
             durations.forEach(duration => {
                 const button = document.createElement('button');
@@ -147,12 +165,50 @@
                     this.classList.remove('bg-gray-700');
                     this.classList.add('bg-primary-600');
                     
-                    // Update selected duration
-                    selectedDuration = duration;
+                    // Update session state
+                    sessionState.length_minutes = duration;
+                    updateDebugOutput();
                 });
                 
                 durationGrid.appendChild(button);
             });
+            
+            // Theme selector dropdown handling
+            const themeSelector = document.getElementById('themeSelector');
+            const themeDescription = document.getElementById('themeDescription');
+            
+            themeSelector.addEventListener('change', function() {
+                if (this.value === 'Custom') {
+                    // Clear the textarea for custom input
+                    themeDescription.value = '';
+                    themeDescription.focus();
+                } else if (this.value !== '') {
+                    // Set the textarea with the selected theme
+                    themeDescription.value = this.value + ' meditation to ' + getThemeDescription(this.value);
+                    updateCounter(themeDescription, themeCounter);
+                    
+                    // Update session state
+                    sessionState.theme = this.value;
+                    updateDebugOutput();
+                }
+            });
+            
+            // Helper to get theme descriptions
+            function getThemeDescription(theme) {
+                const descriptions = {
+                    'Stress Relief': 'help calm the mind and release tension from the body',
+                    'Sleep': 'prepare the mind and body for deep, restorative sleep',
+                    'Focus': 'enhance concentration and mental clarity',
+                    'Anxiety': 'reduce anxious thoughts and find inner calm',
+                    'Gratitude': 'cultivate appreciation for life's blessings',
+                    'Self-Love': 'foster self-compassion and inner kindness',
+                    'Mindfulness': 'develop present moment awareness and acceptance',
+                    'Energy': 'invigorate the mind and body with positive energy',
+                    'Healing': 'support the body's natural healing processes'
+                };
+                
+                return descriptions[theme] || '';
+            }
             
             // Character counters for textareas
             const themeTextarea = document.getElementById('themeDescription');
@@ -166,85 +222,32 @@
                 counter.textContent = `${currentLength}/${maxLength}`;
             }
             
-            themeTextarea.addEventListener('input', () => updateCounter(themeTextarea, themeCounter));
-            visualTextarea.addEventListener('input', () => updateCounter(visualTextarea, visualCounter));
-            
-            // Generate music tracks
-            const musicTracks = document.getElementById('musicTracks');
-            const trackData = [
-                { id: 1, title: 'Peaceful Ambience', artist: 'Serenity', duration: '4:32' },
-                { id: 2, title: 'Ocean Waves', artist: 'Nature Sounds', duration: '5:16' },
-                { id: 3, title: 'Forest Morning', artist: 'Woodland', duration: '3:45' },
-                { id: 4, title: 'Deep Meditation', artist: 'Zen Master', duration: '6:20' },
-                { id: 5, title: 'Theta Waves', artist: 'Binaural Beats', duration: '8:15' }
-            ];
-            
-            trackData.forEach(track => {
-                // Create track item
-                const trackItem = document.createElement('div');
-                trackItem.className = 'flex items-center bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition-colors';
-                trackItem.innerHTML = `
-                    <button class="play-btn w-10 h-10 flex items-center justify-center rounded-full bg-primary-600 hover:bg-primary-500 mr-4 transition-colors" data-id="${track.id}">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    
-                    <div class="flex-1 min-w-0">
-                        <div class="font-medium">${track.title}</div>
-                        <div class="text-sm text-gray-400">${track.artist}</div>
-                    </div>
-                    
-                    <div class="hidden sm:block flex-1 px-4">
-                        <!-- Simple CSS waveform -->
-                        <div class="h-6 flex items-center">
-                            ${generateWaveform()}
-                        </div>
-                    </div>
-                    
-                    <div class="text-sm text-gray-400 mr-4">${track.duration}</div>
-                    
-                    <button class="add-track-btn p-2 rounded-full hover:bg-gray-500 transition-colors" data-id="${track.id}">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                `;
-                
-                musicTracks.appendChild(trackItem);
+            // Input event listeners with session state updates
+            themeTextarea.addEventListener('input', function() {
+                updateCounter(themeTextarea, themeCounter);
+                sessionState.theme = this.value;
+                updateDebugOutput();
             });
             
-            // Handle play button clicks
-            document.querySelectorAll('.play-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const isPlaying = this.classList.contains('playing');
-                    
-                    // Reset all play buttons
-                    document.querySelectorAll('.play-btn').forEach(playBtn => {
-                        playBtn.classList.remove('playing');
-                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                    });
-                    
-                    // If wasn't playing, set to playing
-                    if (!isPlaying) {
-                        this.classList.add('playing');
-                        this.innerHTML = '<i class="fas fa-pause"></i>';
-                    }
-                });
+            visualTextarea.addEventListener('input', function() {
+                updateCounter(visualTextarea, visualCounter);
+                sessionState.visual_theme_description = this.value;
+                updateDebugOutput();
             });
             
-            // Generate waveform
-            function generateWaveform() {
-                let waveformHtml = '';
-                const bars = 30;
-                
-                for (let i = 0; i < bars; i++) {
-                    const height = Math.floor(Math.random() * 100) + 20;
-                    waveformHtml += `<div class="w-1 mx-0.5 bg-gray-500" style="height: ${height}%"></div>`;
-                }
-                
-                return `<div class="flex items-center w-full h-full">${waveformHtml}</div>`;
-            }
+            document.getElementById('meditationTitle').addEventListener('input', function() {
+                sessionState.meditation_title = this.value;
+                updateDebugOutput();
+            });
             
             // Generate with AI button
             document.getElementById('generateVisualBtn').addEventListener('click', function() {
                 const themeText = document.getElementById('themeDescription').value;
+                
+                if (!themeText.trim()) {
+                    alert('Please describe your meditation theme first');
+                    return;
+                }
                 
                 // In a real app, this would call an AI API
                 // For demo, just simulate with a timeout
@@ -256,47 +259,103 @@
                     document.getElementById('visualTheme').value = aiSuggestion;
                     updateCounter(visualTextarea, visualCounter);
                     
+                    // Update session state
+                    sessionState.visual_theme_description = aiSuggestion;
+                    updateDebugOutput();
+                    
                     this.innerHTML = '<i class="fas fa-wand-magic-sparkles text-xl"></i>';
                     this.disabled = false;
                 }, 1500);
             });
             
-            // Form validation
-            document.getElementById('meditationForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
+            // Generate Transcript button - proceed to step 2
+            document.getElementById('generateTranscriptBtn').addEventListener('click', function() {
+                // Validate form
                 let isValid = true;
                 let errorMessage = '';
                 
                 // Check if duration is selected
-                if (selectedDuration === null) {
+                if (sessionState.length_minutes === null) {
                     isValid = false;
                     errorMessage += 'Please select a meditation duration. ';
                 }
                 
                 // Check if title is entered
-                const title = document.getElementById('meditationTitle').value.trim();
-                if (title === '') {
+                if (!sessionState.meditation_title.trim()) {
                     isValid = false;
                     errorMessage += 'Please enter a meditation title. ';
                 }
                 
                 // Check if theme is entered
-                const theme = document.getElementById('themeDescription').value.trim();
-                if (theme === '') {
+                if (!sessionState.theme.trim()) {
                     isValid = false;
                     errorMessage += 'Please describe the meditation theme. ';
                 }
                 
+                // Check if visual theme is entered
+                if (!sessionState.visual_theme_description.trim()) {
+                    isValid = false;
+                    errorMessage += 'Please describe the visual theme. ';
+                }
+                
                 if (isValid) {
-                    // Form is valid, would submit in a real app
-                    alert('Meditation created successfully!');
-                    // In a real app, this would submit the form or call an API
+                    // In a real app, this would proceed to step 2
+                    alert('Proceeding to transcript generation...');
+                    console.log('Step 1 completed. Session data:', sessionState);
+                    
+                    // Store data in localStorage for persistence
+                    localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                    
+                    // In a full implementation, this would redirect to the next step
+                    // window.location.href = 'transcript.html';
                 } else {
                     // Show error
                     alert(errorMessage);
                 }
             });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    jsonOutput.textContent = JSON.stringify(sessionState, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Check for existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    
+                    // Restore form values
+                    document.getElementById('meditationTitle').value = data.meditation_title || '';
+                    document.getElementById('themeDescription').value = data.theme || '';
+                    document.getElementById('visualTheme').value = data.visual_theme_description || '';
+                    
+                    // Restore duration selection
+                    if (data.length_minutes) {
+                        const durationBtn = document.querySelector(`.duration-btn[data-duration="${data.length_minutes}"]`);
+                        if (durationBtn) {
+                            durationBtn.click();
+                        }
+                    }
+                    
+                    // Update counters
+                    updateCounter(themeTextarea, themeCounter);
+                    updateCounter(visualTextarea, visualCounter);
+                    
+                    // Update session state
+                    Object.assign(sessionState, data);
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error restoring session:', e);
+                }
+            }
         });
     </script>
 </body>

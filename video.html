@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Generation | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 5: Video Generation</p>
+        </div>
+        
+        <!-- API Usage Stats -->
+        <div class="fixed top-4 right-4 z-10 flex space-x-3">
+            <div class="bg-gray-800 px-4 py-2 rounded-full shadow-lg flex items-center">
+                <span class="text-orange-400 font-medium mr-2">Runway:</span>
+                <span id="runwayCredits" class="text-white">0 credits</span>
+            </div>
+        </div>
+        
+        <!-- Meditation Preview Panel -->
+        <section class="bg-gray-800 rounded-xl p-5 shadow-lg flex items-center mb-8">
+            <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-spa text-white text-xl"></i>
+            </div>
+            <div class="flex-grow">
+                <h2 id="meditationTitle" class="text-xl font-semibold">Peaceful Mountain Meditation</h2>
+                <div class="flex flex-wrap items-center text-sm text-gray-400 mt-1">
+                    <span id="meditationLength" class="flex items-center mr-4">
+                        <i class="far fa-clock mr-1"></i> 15 minutes
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-images mr-1"></i> 
+                        <span id="sceneCount">8</span> scenes
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-film mr-1"></i> 
+                        <span id="videoLength">3:12</span> runtime
+                    </span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video Generation Controls -->
+        <section class="bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h2 class="text-2xl font-semibold">Image-to-Video Generation</h2>
+                
+                <div class="flex space-x-3">
+                    <div class="relative group">
+                        <button id="motionStyleBtn" class="flex items-center space-x-2 bg-primary-600 hover:bg-primary-500 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-wind"></i>
+                            <span>Gentle Flow</span>
+                            <i class="fas fa-chevron-down ml-1"></i>
+                        </button>
+                        
+                        <div id="motionStyleDropdown" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 hidden group-focus-within:block">
+                            <div class="p-2 space-y-1">
+                                <button class="motion-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="gentle">Gentle Flow</button>
+                                <button class="motion-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="zoom">Smooth Zoom</button>
+                                <button class="motion-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="pan">Slow Pan</button>
+                                <button class="motion-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="drift">Dreamy Drift</button>
+                                <button class="motion-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-style="ripple">Water Ripples</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <button id="videoLengthBtn" class="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-clock"></i>
+                            <span>24 sec/scene</span>
+                            <i class="fas fa-chevron-down ml-1"></i>
+                        </button>
+                        
+                        <div id="lengthDropdown" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 hidden group-focus-within:block">
+                            <div class="p-2 space-y-1">
+                                <button class="length-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-length="10">10 sec/scene</button>
+                                <button class="length-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-length="15">15 sec/scene</button>
+                                <button class="length-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-length="24">24 sec/scene (recommended)</button>
+                                <button class="length-option w-full text-left px-3 py-2 rounded hover:bg-gray-700 transition-colors" data-length="30">30 sec/scene</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cost Estimator -->
+            <div class="bg-gray-700 rounded-lg p-4 mb-6">
+                <h3 class="font-medium mb-2 flex items-center">
+                    <i class="fas fa-calculator text-primary-400 mr-2"></i>
+                    Generation Cost Estimate
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <div class="text-gray-400 text-sm">Scenes</div>
+                        <div class="font-medium" id="costSceneCount">8</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-400 text-sm">Seconds per Scene</div>
+                        <div class="font-medium" id="costSecondsPerScene">24</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-400 text-sm">Total Runway Credits</div>
+                        <div class="font-medium" id="costTotal">24</div>
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-gray-400">
+                    Note: Runway ML charges 1 credit per 4 seconds of video generation (1080p)
+                </div>
+            </div>
+            
+            <!-- Progress Tracking -->
+            <div id="generationProgress">
+                <div class="flex justify-between text-sm text-gray-400 mb-2">
+                    <span>Generating video segments...</span>
+                    <span id="progressText">0/8 scenes</span>
+                </div>
+                <div class="bg-gray-700 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-primary-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button id="startGenerationBtn" class="bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center">
+                        <i class="fas fa-play mr-2"></i>
+                        <span>Start Video Generation</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video Segment Grid -->
+        <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Video segment cards will be generated by JavaScript -->
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+            <a href="storyboard.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+            <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Voice Engineering <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 5,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                dalle_credits_used: 0,
+                runway_credits_used: 0,
+                selected_music: [],
+                ai_style: 'photorealistic',
+                storyboard: [],
+                motion_style: 'gentle',
+                seconds_per_scene: 24,
+                video_segments: []
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').textContent = sessionState.meditation_title;
+                    document.getElementById('meditationLength').innerHTML = `<i class="far fa-clock mr-1"></i> ${sessionState.length_minutes} minutes`;
+                    
+                    // Update scene count if storyboard exists
+                    if (sessionState.storyboard) {
+                        const sceneCount = sessionState.storyboard.length;
+                        document.getElementById('sceneCount').textContent = sceneCount;
+                        document.getElementById('costSceneCount').textContent = sceneCount;
+                        document.getElementById('progressText').textContent = `0/${sceneCount} scenes`;
+                    }
+                    
+                    // Calculate video length
+                    calculateVideoLength();
+                    
+                    // Update API usage counters
+                    document.getElementById('runwayCredits').textContent = `${sessionState.runway_credits_used} credits`;
+                    
+                    // Populate video grid if we have video segments
+                    if (sessionState.video_segments && sessionState.video_segments.length > 0) {
+                        populateVideoGrid();
+                        updateGenerationUI(true);
+                    } else {
+                        populateImagePlaceholders();
+                    }
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Calculate estimated total video length
+            function calculateVideoLength() {
+                if (!sessionState.storyboard) return;
+                
+                const sceneCount = sessionState.storyboard.length;
+                const secondsPerScene = sessionState.seconds_per_scene || 24;
+                const totalSeconds = sceneCount * secondsPerScene;
+                
+                // Format as MM:SS
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                document.getElementById('videoLength').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update cost calculator
+                document.getElementById('costSecondsPerScene').textContent = secondsPerScene;
+                
+                // Runway charges 1 credit per 4 seconds of video
+                const totalCredits = Math.ceil((sceneCount * secondsPerScene) / 4);
+                document.getElementById('costTotal').textContent = totalCredits;
+            }
+            
+            // Populate image placeholders for scenes
+            function populateImagePlaceholders() {
+                if (!sessionState.storyboard || sessionState.storyboard.length === 0) return;
+                
+                const grid = document.getElementById('videoGrid');
+                grid.innerHTML = '';
+                
+                sessionState.storyboard.forEach((scene, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-800 rounded-xl overflow-hidden shadow-lg';
+                    card.dataset.sceneId = scene.id;
+                    
+                    card.innerHTML = `
+                        <div class="relative h-48 bg-gray-700 overflow-hidden">
+                            <img src="${scene.imageUrl}" alt="${scene.title}" class="w-full h-full object-cover">
+                            <div class="absolute top-2 left-2 bg-gray-900/70 text-white text-xs px-2 py-1 rounded">
+                                Scene ${scene.id}
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/60">
+                                <div class="text-center">
+                                    <div class="text-white mb-2">Image Ready for Video Generation</div>
+                                    <div class="text-xs text-gray-300">Will generate ${sessionState.seconds_per_scene} sec video</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-lg mb-1">${scene.title}</h3>
+                            <p class="text-gray-400 text-xs mb-2">${sessionState.motion_style} motion effect</p>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+            }
+            
+            // Populate video grid with generated segments
+            function populateVideoGrid() {
+                if (!sessionState.video_segments || sessionState.video_segments.length === 0) return;
+                
+                const grid = document.getElementById('videoGrid');
+                grid.innerHTML = '';
+                
+                sessionState.video_segments.forEach(segment => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-800 rounded-xl overflow-hidden shadow-lg';
+                    card.dataset.sceneId = segment.scene_id;
+                    
+                    // Find the original scene
+                    const scene = sessionState.storyboard.find(s => s.id === segment.scene_id);
+                    
+                    card.innerHTML = `
+                        <div class="relative h-48 bg-gray-700 overflow-hidden">
+                            <video src="${segment.video_url}" poster="${scene?.imageUrl}" class="w-full h-full object-cover" loop muted></video>
+                            <div class="absolute top-2 left-2 bg-gray-900/70 text-white text-xs px-2 py-1 rounded">
+                                Scene ${segment.scene_id}
+                            </div>
+                            <div class="absolute bottom-2 right-2">
+                                <button class="play-video-btn bg-primary-600 hover:bg-primary-500 text-white p-2 rounded-full shadow-lg transition-colors">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-lg mb-1">${scene?.title || `Scene ${segment.scene_id}`}</h3>
+                            <p class="text-gray-400 text-xs mb-2">${segment.motion_style} motion effect • ${segment.duration}s</p>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                    
+                    // Add play button functionality
+                    const playBtn = card.querySelector('.play-video-btn');
+                    const videoEl = card.querySelector('video');
+                    
+                    playBtn.addEventListener('click', function() {
+                        if (videoEl.paused) {
+                            // Pause all other videos first
+                            document.querySelectorAll('#videoGrid video').forEach(v => {
+                                if (v !== videoEl) {
+                                    v.pause();
+                                    const btn = v.parentElement.querySelector('.play-video-btn i');
+                                    if (btn) btn.className = 'fas fa-play';
+                                }
+                            });
+                            
+                            // Play this video
+                            videoEl.play();
+                            this.querySelector('i').className = 'fas fa-pause';
+                        } else {
+                            videoEl.pause();
+                            this.querySelector('i').className = 'fas fa-play';
+                        }
+                    });
+                });
+                
+                // Enable proceed button if all scenes have video
+                if (sessionState.video_segments.length === sessionState.storyboard.length) {
+                    document.getElementById('proceedBtn').disabled = false;
+                }
+            }
+            
+            // Start video generation process
+            function startVideoGeneration() {
+                if (!sessionState.storyboard || sessionState.storyboard.length === 0) return;
+                
+                // Update UI
+                const startBtn = document.getElementById('startGenerationBtn');
+                startBtn.disabled = true;
+                startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Generating...</span>';
+                
+                // Reset progress bar
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = '0%';
+                
+                // Initialize video segments array if not exists
+                if (!sessionState.video_segments) {
+                    sessionState.video_segments = [];
+                }
+                
+                // Count how many scenes need generation
+                const totalScenes = sessionState.storyboard.length;
+                const scenesDone = sessionState.video_segments.length;
+                let currentScene = scenesDone;
+                
+                document.getElementById('progressText').textContent = `${currentScene}/${totalScenes} scenes`;
+                
+                // Function to generate one video segment
+                const generateVideoSegment = () => {
+                    if (currentScene < totalScenes) {
+                        // Get the scene
+                        const scene = sessionState.storyboard[currentScene];
+                        
+                        // In a real app, this would call Runway API
+                        // For demo, simulate with a timeout
+                        setTimeout(() => {
+                            // Create a video segment object
+                            const segment = {
+                                scene_id: scene.id,
+                                motion_style: sessionState.motion_style,
+                                duration: sessionState.seconds_per_scene,
+                                // In a real app, this would be the actual video URL from Runway
+                                video_url: `https://example.com/video_${scene.id}.mp4`
+                            };
+                            
+                            // Add to session state
+                            sessionState.video_segments.push(segment);
+                            
+                            // Update Runway credits used (1 credit per 4 seconds)
+                            const creditsUsed = Math.ceil(segment.duration / 4);
+                            sessionState.runway_credits_used += creditsUsed;
+                            document.getElementById('runwayCredits').textContent = `${sessionState.runway_credits_used} credits`;
+                            
+                            // Update progress
+                            currentScene++;
+                            const progress = (currentScene / totalScenes) * 100;
+                            progressBar.style.width = `${progress}%`;
+                            document.getElementById('progressText').textContent = `${currentScene}/${totalScenes} scenes`;
+                            
+                            // Save session state
+                            localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                            updateDebugOutput();
+                            
+                            // Continue with next scene or finish
+                            if (currentScene < totalScenes) {
+                                generateVideoSegment();
+                            } else {
+                                // All done
+                                updateGenerationUI(true);
+                                populateVideoGrid();
+                            }
+                        }, 2000 + Math.random() * 2000); // Simulate varying generation times
+                    }
+                };
+                
+                // Start generation
+                generateVideoSegment();
+            }
+            
+            // Update UI after generation completes
+            function updateGenerationUI(completed) {
+                const startBtn = document.getElementById('startGenerationBtn');
+                
+                if (completed) {
+                    startBtn.innerHTML = '<i class="fas fa-check mr-2"></i><span>Generation Complete</span>';
+                    startBtn.className = 'bg-green-600 text-white px-6 py-2 rounded-lg inline-flex items-center cursor-default';
+                    document.getElementById('proceedBtn').disabled = false;
+                } else {
+                    startBtn.disabled = false;
+                    startBtn.innerHTML = '<i class="fas fa-play mr-2"></i><span>Start Video Generation</span>';
+                    startBtn.className = 'bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center';
+                }
+            }
+            
+            // Change motion style
+            function changeMotionStyle(style) {
+                // Update session state
+                sessionState.motion_style = style;
+                
+                // Close dropdown
+                document.getElementById('motionStyleDropdown').classList.add('hidden');
+                
+                // Update button text
+                const styleNames = {
+                    'gentle': 'Gentle Flow',
+                    'zoom': 'Smooth Zoom',
+                    'pan': 'Slow Pan',
+                    'drift': 'Dreamy Drift',
+                    'ripple': 'Water Ripples'
+                };
+                
+                document.getElementById('motionStyleBtn').innerHTML = `
+                    <i class="fas fa-wind"></i>
+                    <span>${styleNames[style] || 'Motion Style'}</span>
+                    <i class="fas fa-chevron-down ml-1"></i>
+                `;
+                
+                // Update any existing placeholders
+                if (!sessionState.video_segments || sessionState.video_segments.length === 0) {
+                    populateImagePlaceholders();
+                }
+                
+                // Save session state
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            }
+            
+            // Change seconds per scene
+            function changeSecondsPerScene(seconds) {
+                // Update session state
+                sessionState.seconds_per_scene = parseInt(seconds);
+                
+                // Close dropdown
+                document.getElementById('lengthDropdown').classList.add('hidden');
+                
+                // Update button text
+                document.getElementById('videoLengthBtn').innerHTML = `
+                    <i class="fas fa-clock"></i>
+                    <span>${seconds} sec/scene</span>
+                    <i class="fas fa-chevron-down ml-1"></i>
+                `;
+                
+                // Update video length and cost estimate
+                calculateVideoLength();
+                
+                // Update any existing placeholders
+                if (!sessionState.video_segments || sessionState.video_segments.length === 0) {
+                    populateImagePlaceholders();
+                }
+                
+                // Save session state
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            }
+            
+            // Event Listeners
+            
+            // Start generation button
+            document.getElementById('startGenerationBtn').addEventListener('click', startVideoGeneration);
+            
+            // Motion style dropdown
+            document.getElementById('motionStyleBtn').addEventListener('click', function() {
+                document.getElementById('motionStyleDropdown').classList.toggle('hidden');
+            });
+            
+            // Motion style options
+            document.querySelectorAll('.motion-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    changeMotionStyle(this.dataset.style);
+                });
+            });
+            
+            // Video length dropdown
+            document.getElementById('videoLengthBtn').addEventListener('click', function() {
+                document.getElementById('lengthDropdown').classList.toggle('hidden');
+            });
+            
+            // Length options
+            document.querySelectorAll('.length-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    changeSecondsPerScene(this.dataset.length);
+                });
+            });
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to voice engineering...');
+                // window.location.href = 'voice.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    // Don't show the full image/video URLs to keep the debug output readable
+                    const debugData = {...sessionState};
+                    if (debugData.storyboard) {
+                        debugData.storyboard = debugData.storyboard.map(scene => ({
+                            ...scene,
+                            imageUrl: '...' // Truncate image URLs
+                        }));
+                    }
+                    if (debugData.video_segments) {
+                        debugData.video_segments = debugData.video_segments.map(segment => ({
+                            ...segment,
+                            video_url: '...' // Truncate video URLs
+                        }));
+                    }
+                    jsonOutput.textContent = JSON.stringify(debugData, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                const motionDropdown = document.getElementById('motionStyleDropdown');
+                const motionBtn = document.getElementById('motionStyleBtn');
+                const lengthDropdown = document.getElementById('lengthDropdown');
+                const lengthBtn = document.getElementById('videoLengthBtn');
+                
+                if (!motionBtn.contains(event.target) && !motionDropdown.contains(event.target)) {
+                    motionDropdown.classList.add('hidden');
+                }
+                
+                if (!lengthBtn.contains(event.target) && !lengthDropdown.contains(event.target)) {
+                    lengthDropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

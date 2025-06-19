@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Selection | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sortable.js for drag-and-drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+                <div class="h-2 w-16 rounded-full bg-gray-700"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 3: Music Selection</p>
+        </div>
+        
+        <!-- Step 3: Music Selection -->
+        <div class="space-y-8">
+            <!-- Meditation Preview Panel -->
+            <section class="bg-gray-800 rounded-xl p-5 shadow-lg flex items-center">
+                <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas fa-spa text-white text-xl"></i>
+                </div>
+                <div class="flex-grow">
+                    <h2 id="meditationTitle" class="text-xl font-semibold">Peaceful Mountain Meditation</h2>
+                    <div class="flex flex-wrap items-center text-sm text-gray-400 mt-1">
+                        <span id="meditationLength" class="flex items-center mr-4">
+                            <i class="far fa-clock mr-1"></i> 15 minutes
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-microphone-alt mr-1"></i> 
+                            <span id="wordCount">1,245</span> words
+                        </span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Music Search and Selection -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left Column: Search and Browse -->
+                <div class="lg:col-span-2 space-y-6">
+                    <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-semibold mb-4">Find Music Tracks</h2>
+                        
+                        <!-- Search Bar -->
+                        <div class="relative mb-6">
+                            <input type="text" id="searchInput" placeholder="Search by title, mood, instrument..." 
+                                class="w-full bg-gray-700 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        
+                        <!-- Filter Tabs -->
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <button class="filter-btn px-4 py-2 rounded-full bg-primary-600 text-white font-medium" data-filter="all">All</button>
+                            <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors" data-filter="ambient">Ambient</button>
+                            <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors" data-filter="nature">Nature</button>
+                            <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors" data-filter="piano">Piano</button>
+                            <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors" data-filter="binaural">Binaural</button>
+                            <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors" data-filter="guitar">Guitar</button>
+                        </div>
+                        
+                        <!-- Recommended Tracks -->
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-300 mb-3">Recommended for Your Meditation</h3>
+                            <div id="recommendedTracks" class="space-y-3">
+                                <!-- Track items will be populated by JavaScript -->
+                                <div class="animate-pulse flex items-center bg-gray-700/50 rounded-lg p-3">
+                                    <div class="w-10 h-10 bg-gray-600 rounded-full mr-4"></div>
+                                    <div class="flex-1">
+                                        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
+                                        <div class="h-3 bg-gray-600 rounded w-1/2"></div>
+                                    </div>
+                                    <div class="w-16 h-4 bg-gray-600 rounded"></div>
+                                </div>
+                                <div class="animate-pulse flex items-center bg-gray-700/50 rounded-lg p-3">
+                                    <div class="w-10 h-10 bg-gray-600 rounded-full mr-4"></div>
+                                    <div class="flex-1">
+                                        <div class="h-4 bg-gray-600 rounded w-2/3 mb-2"></div>
+                                        <div class="h-3 bg-gray-600 rounded w-1/2"></div>
+                                    </div>
+                                    <div class="w-16 h-4 bg-gray-600 rounded"></div>
+                                </div>
+                                <div class="animate-pulse flex items-center bg-gray-700/50 rounded-lg p-3">
+                                    <div class="w-10 h-10 bg-gray-600 rounded-full mr-4"></div>
+                                    <div class="flex-1">
+                                        <div class="h-4 bg-gray-600 rounded w-1/2 mb-2"></div>
+                                        <div class="h-3 bg-gray-600 rounded w-1/3"></div>
+                                    </div>
+                                    <div class="w-16 h-4 bg-gray-600 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- All Tracks -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-300 mb-3">All Tracks</h3>
+                            <div id="allTracks" class="space-y-3">
+                                <!-- Track items will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Right Column: Selected Tracks -->
+                <div class="lg:col-span-1 space-y-6">
+                    <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-semibold">Selected Music</h2>
+                            <span id="selectedCount" class="bg-primary-600 text-white text-sm font-medium px-2.5 py-0.5 rounded-full">0/3</span>
+                        </div>
+                        
+                        <div class="mb-4 text-sm text-gray-400">
+                            <p>Drag and drop to arrange your tracks in playback order.</p>
+                        </div>
+                        
+                        <!-- Selected Tracks List -->
+                        <div id="selectedTracks" class="space-y-3 min-h-[12rem] border border-dashed border-gray-700 rounded-lg p-3">
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fas fa-music text-2xl mb-2"></i>
+                                <p>Add tracks from the list</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Total Duration -->
+                        <div class="mt-4 flex justify-between text-sm text-gray-400">
+                            <span>Total Duration:</span>
+                            <span id="totalDuration">0:00</span>
+                        </div>
+                    </section>
+                    
+                    <!-- Currently Playing Preview -->
+                    <section id="audioPreview" class="bg-gray-800 rounded-xl p-6 shadow-lg hidden">
+                        <h3 class="text-lg font-medium mb-3">Now Playing</h3>
+                        
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-12 h-12 bg-primary-700 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-music text-primary-300"></i>
+                            </div>
+                            <div>
+                                <div id="previewTitle" class="font-medium">Track Title</div>
+                                <div id="previewArtist" class="text-sm text-gray-400">Artist Name</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audio Controls -->
+                        <div class="space-y-2">
+                            <div class="relative">
+                                <div class="bg-gray-700 h-2 rounded-full">
+                                    <div id="progressBar" class="bg-primary-500 h-full rounded-full" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span id="currentTime">1:23</span>
+                                <span id="duration">3:45</span>
+                            </div>
+                            
+                            <div class="flex justify-center items-center space-x-6 mt-2">
+                                <button class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fas fa-step-backward"></i>
+                                </button>
+                                <button id="playPauseBtn" class="w-10 h-10 rounded-full bg-primary-600 hover:bg-primary-500 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fas fa-step-forward"></i>
+                                </button>
+                                <div class="flex items-center">
+                                    <i class="fas fa-volume-up text-gray-400 mr-2"></i>
+                                    <input type="range" min="0" max="100" value="80" class="w-20 accent-primary-500">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <a href="transcript.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </a>
+                <button id="proceedBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
+                    Create Storyboard <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 3,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                selected_music: []
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Update UI with loaded data
+                    document.getElementById('meditationTitle').textContent = sessionState.meditation_title;
+                    document.getElementById('meditationLength').innerHTML = `<i class="far fa-clock mr-1"></i> ${sessionState.length_minutes} minutes`;
+                    
+                    // Calculate word count if transcript exists
+                    if (sessionState.transcript) {
+                        const wordCount = sessionState.transcript.trim().split(/\s+/).length;
+                        document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+                    }
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Sample Envato API music data (would be fetched from API in production)
+            const musicLibrary = [
+                {
+                    id: '1',
+                    title: 'Peaceful Ambience',
+                    artist: 'Serenity',
+                    duration: '4:32',
+                    durationSec: 272,
+                    category: 'ambient',
+                    keywords: ['calm', 'peaceful', 'ambient', 'meditation'],
+                    image: 'https://via.placeholder.com/80/8b5cf6/FFFFFF?text=PA'
+                },
+                {
+                    id: '2',
+                    title: 'Ocean Waves',
+                    artist: 'Nature Sounds',
+                    duration: '5:16',
+                    durationSec: 316,
+                    category: 'nature',
+                    keywords: ['ocean', 'waves', 'water', 'nature'],
+                    image: 'https://via.placeholder.com/80/3b82f6/FFFFFF?text=OW'
+                },
+                {
+                    id: '3',
+                    title: 'Forest Morning',
+                    artist: 'Woodland',
+                    duration: '3:45',
+                    durationSec: 225,
+                    category: 'nature',
+                    keywords: ['forest', 'birds', 'nature', 'morning'],
+                    image: 'https://via.placeholder.com/80/10b981/FFFFFF?text=FM'
+                },
+                {
+                    id: '4',
+                    title: 'Deep Meditation',
+                    artist: 'Zen Master',
+                    duration: '6:20',
+                    durationSec: 380,
+                    category: 'binaural',
+                    keywords: ['deep', 'zen', 'meditation', 'binaural'],
+                    image: 'https://via.placeholder.com/80/6366f1/FFFFFF?text=DM'
+                },
+                {
+                    id: '5',
+                    title: 'Theta Waves',
+                    artist: 'Binaural Beats',
+                    duration: '8:15',
+                    durationSec: 495,
+                    category: 'binaural',
+                    keywords: ['theta', 'waves', 'binaural', 'brainwave'],
+                    image: 'https://via.placeholder.com/80/8b5cf6/FFFFFF?text=TW'
+                },
+                {
+                    id: '6',
+                    title: 'Piano Serenity',
+                    artist: 'Classical Moods',
+                    duration: '4:10',
+                    durationSec: 250,
+                    category: 'piano',
+                    keywords: ['piano', 'classical', 'calm', 'instrumental'],
+                    image: 'https://via.placeholder.com/80/ec4899/FFFFFF?text=PS'
+                },
+                {
+                    id: '7',
+                    title: 'Acoustic Reflections',
+                    artist: 'Guitar Dreams',
+                    duration: '3:55',
+                    durationSec: 235,
+                    category: 'guitar',
+                    keywords: ['guitar', 'acoustic', 'reflective', 'instrumental'],
+                    image: 'https://via.placeholder.com/80/f59e0b/FFFFFF?text=AR'
+                },
+                {
+                    id: '8',
+                    title: 'Mountain Stream',
+                    artist: 'Pure Nature',
+                    duration: '5:45',
+                    durationSec: 345,
+                    category: 'nature',
+                    keywords: ['stream', 'water', 'mountain', 'nature'],
+                    image: 'https://via.placeholder.com/80/3b82f6/FFFFFF?text=MS'
+                },
+                {
+                    id: '9',
+                    title: 'Floating Clouds',
+                    artist: 'Ambient Dreams',
+                    duration: '7:20',
+                    durationSec: 440,
+                    category: 'ambient',
+                    keywords: ['ambient', 'atmospheric', 'floating', 'clouds'],
+                    image: 'https://via.placeholder.com/80/8b5cf6/FFFFFF?text=FC'
+                },
+                {
+                    id: '10',
+                    title: 'Gentle Rain',
+                    artist: 'Nature Sounds',
+                    duration: '6:10',
+                    durationSec: 370,
+                    category: 'nature',
+                    keywords: ['rain', 'gentle', 'water', 'nature'],
+                    image: 'https://via.placeholder.com/80/3b82f6/FFFFFF?text=GR'
+                }
+            ];
+            
+            // Generate recommended tracks based on meditation theme
+            function generateRecommendedTracks() {
+                // In a real app, this would use the Envato API with the theme as input
+                // For demo, just pick 3 random tracks
+                const recommendedIds = [];
+                while (recommendedIds.length < 3) {
+                    const randomId = Math.floor(Math.random() * musicLibrary.length) + 1;
+                    if (!recommendedIds.includes(randomId.toString())) {
+                        recommendedIds.push(randomId.toString());
+                    }
+                }
+                
+                // Find the recommended tracks from the library
+                return musicLibrary.filter(track => recommendedIds.includes(track.id));
+            }
+            
+            // Populate track lists
+            function populateTrackLists() {
+                // Get recommended tracks
+                const recommendedTracks = generateRecommendedTracks();
+                
+                // Clear loading placeholders
+                document.getElementById('recommendedTracks').innerHTML = '';
+                
+                // Add recommended tracks
+                recommendedTracks.forEach(track => {
+                    const trackEl = createTrackElement(track);
+                    document.getElementById('recommendedTracks').appendChild(trackEl);
+                });
+                
+                // Add all tracks
+                document.getElementById('allTracks').innerHTML = '';
+                musicLibrary.forEach(track => {
+                    const trackEl = createTrackElement(track);
+                    document.getElementById('allTracks').appendChild(trackEl);
+                });
+                
+                // Restore selected tracks from session
+                if (sessionState.selected_music && sessionState.selected_music.length > 0) {
+                    sessionState.selected_music.forEach(trackId => {
+                        const track = musicLibrary.find(t => t.id === trackId);
+                        if (track) {
+                            addTrackToSelection(track);
+                        }
+                    });
+                }
+            }
+            
+            // Create a track element
+            function createTrackElement(track) {
+                const trackEl = document.createElement('div');
+                trackEl.className = 'track-item flex items-center bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition-colors';
+                trackEl.dataset.id = track.id;
+                trackEl.dataset.category = track.category;
+                
+                trackEl.innerHTML = `
+                    <button class="play-btn w-10 h-10 flex items-center justify-center rounded-full bg-primary-600 hover:bg-primary-500 mr-4 transition-colors" data-id="${track.id}">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium">${track.title}</div>
+                        <div class="text-sm text-gray-400">${track.artist}</div>
+                    </div>
+                    
+                    <div class="hidden sm:block flex-1 px-4">
+                        <!-- Simple CSS waveform -->
+                        <div class="h-6 flex items-center">
+                            ${generateWaveform()}
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-400 mr-4">${track.duration}</div>
+                    
+                    <button class="add-track-btn p-2 rounded-full hover:bg-gray-500 transition-colors" data-id="${track.id}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                `;
+                
+                // Add event listeners
+                const playBtn = trackEl.querySelector('.play-btn');
+                playBtn.addEventListener('click', function() {
+                    playTrack(track);
+                });
+                
+                const addBtn = trackEl.querySelector('.add-track-btn');
+                addBtn.addEventListener('click', function() {
+                    addTrackToSelection(track);
+                });
+                
+                return trackEl;
+            }
+            
+            // Generate waveform
+            function generateWaveform() {
+                let waveformHtml = '';
+                const bars = 30;
+                
+                for (let i = 0; i < bars; i++) {
+                    const height = Math.floor(Math.random() * 100) + 20;
+                    waveformHtml += `<div class="w-1 mx-0.5 bg-gray-500" style="height: ${height}%"></div>`;
+                }
+                
+                return `<div class="flex items-center w-full h-full">${waveformHtml}</div>`;
+            }
+            
+            // Play a track
+            function playTrack(track) {
+                // Update play button states
+                document.querySelectorAll('.play-btn').forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-play"></i>';
+                });
+                
+                const playBtn = document.querySelector(`.play-btn[data-id="${track.id}"]`);
+                if (playBtn) {
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }
+                
+                // Show audio preview panel
+                const previewPanel = document.getElementById('audioPreview');
+                previewPanel.classList.remove('hidden');
+                
+                // Update preview information
+                document.getElementById('previewTitle').textContent = track.title;
+                document.getElementById('previewArtist').textContent = track.artist;
+                document.getElementById('duration').textContent = track.duration;
+                document.getElementById('currentTime').textContent = '0:00';
+                
+                // Reset progress bar
+                document.getElementById('progressBar').style.width = '0%';
+                
+                // In a real app, this would play the actual audio
+                // For demo, simulate playback with a timer
+                let currentTime = 0;
+                const updateInterval = setInterval(() => {
+                    currentTime += 1;
+                    const progress = (currentTime / track.durationSec) * 100;
+                    document.getElementById('progressBar').style.width = `${progress}%`;
+                    
+                    const minutes = Math.floor(currentTime / 60);
+                    const seconds = currentTime % 60;
+                    document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (currentTime >= track.durationSec) {
+                        clearInterval(updateInterval);
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    }
+                }, 1000);
+                
+                // Store the interval ID to clear it if needed
+                window.currentPlaybackInterval = updateInterval;
+                
+                // Set play/pause button
+                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+                document.getElementById('playPauseBtn').onclick = function() {
+                    if (this.innerHTML.includes('pause')) {
+                        // Pause
+                        this.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        clearInterval(updateInterval);
+                    } else {
+                        // Resume
+                        this.innerHTML = '<i class="fas fa-pause"></i>';
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        
+                        // In a real app, this would resume the audio
+                        // For demo, just restart the timer
+                        window.currentPlaybackInterval = setInterval(() => {
+                            currentTime += 1;
+                            const progress = (currentTime / track.durationSec) * 100;
+                            document.getElementById('progressBar').style.width = `${progress}%`;
+                            
+                            const minutes = Math.floor(currentTime / 60);
+                            const seconds = currentTime % 60;
+                            document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                            
+                            if (currentTime >= track.durationSec) {
+                                clearInterval(window.currentPlaybackInterval);
+                                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                            }
+                        }, 1000);
+                    }
+                };
+            }
+            
+            // Add a track to the selected list
+            function addTrackToSelection(track) {
+                // Get current selection
+                const selectedContainer = document.getElementById('selectedTracks');
+                const currentSelections = selectedContainer.querySelectorAll('.selected-track');
+                
+                // Check if this track is already selected
+                const isAlreadySelected = Array.from(currentSelections).some(el => el.dataset.id === track.id);
+                if (isAlreadySelected) {
+                    return;
+                }
+                
+                // Check if we've reached the maximum (3 tracks)
+                if (currentSelections.length >= 3) {
+                    alert('Maximum of 3 tracks allowed. Remove a track before adding a new one.');
+                    return;
+                }
+                
+                // Clear empty state if this is the first track
+                if (currentSelections.length === 0) {
+                    selectedContainer.innerHTML = '';
+                }
+                
+                // Create the selected track element
+                const selectedEl = document.createElement('div');
+                selectedEl.className = 'selected-track flex items-center bg-gray-700 rounded-lg p-3';
+                selectedEl.dataset.id = track.id;
+                selectedEl.dataset.duration = track.durationSec;
+                
+                selectedEl.innerHTML = `
+                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-700 mr-4 cursor-move handle">
+                        <i class="fas fa-grip-lines text-primary-300"></i>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium">${track.title}</div>
+                        <div class="text-sm text-gray-400">${track.artist} · ${track.duration}</div>
+                    </div>
+                    
+                    <button class="remove-track-btn p-2 rounded-full hover:bg-gray-600 transition-colors" data-id="${track.id}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                // Add to the selected container
+                selectedContainer.appendChild(selectedEl);
+                
+                // Add remove event listener
+                selectedEl.querySelector('.remove-track-btn').addEventListener('click', function() {
+                    selectedEl.remove();
+                    
+                    // Show empty state if no tracks are selected
+                    if (selectedContainer.children.length === 0) {
+                        selectedContainer.innerHTML = `
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fas fa-music text-2xl mb-2"></i>
+                                <p>Add tracks from the list</p>
+                            </div>
+                        `;
+                    }
+                    
+                    // Update selected count
+                    updateSelectedCount();
+                    
+                    // Update total duration
+                    updateTotalDuration();
+                    
+                    // Update session state
+                    updateSelectedMusicInSession();
+                });
+                
+                // Update selected count
+                updateSelectedCount();
+                
+                // Update total duration
+                updateTotalDuration();
+                
+                // Update session state
+                updateSelectedMusicInSession();
+            }
+            
+            // Update the selected count display
+            function updateSelectedCount() {
+                const selectedContainer = document.getElementById('selectedTracks');
+                const currentSelections = selectedContainer.querySelectorAll('.selected-track');
+                document.getElementById('selectedCount').textContent = `${currentSelections.length}/3`;
+            }
+            
+            // Update the total duration display
+            function updateTotalDuration() {
+                const selectedContainer = document.getElementById('selectedTracks');
+                const currentSelections = selectedContainer.querySelectorAll('.selected-track');
+                
+                let totalSeconds = 0;
+                currentSelections.forEach(el => {
+                    totalSeconds += parseInt(el.dataset.duration);
+                });
+                
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                document.getElementById('totalDuration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update selected music in session state
+            function updateSelectedMusicInSession() {
+                const selectedContainer = document.getElementById('selectedTracks');
+                const currentSelections = selectedContainer.querySelectorAll('.selected-track');
+                
+                const selectedIds = Array.from(currentSelections).map(el => el.dataset.id);
+                sessionState.selected_music = selectedIds;
+                
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+            }
+            
+            // Filter tracks
+            function filterTracks(category) {
+                const allTracks = document.querySelectorAll('.track-item');
+                
+                allTracks.forEach(track => {
+                    if (category === 'all' || track.dataset.category === category) {
+                        track.style.display = '';
+                    } else {
+                        track.style.display = 'none';
+                    }
+                });
+                
+                // Update filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    if (btn.dataset.filter === category) {
+                        btn.classList.remove('bg-gray-700');
+                        btn.classList.add('bg-primary-600');
+                    } else {
+                        btn.classList.remove('bg-primary-600');
+                        btn.classList.add('bg-gray-700');
+                    }
+                });
+            }
+            
+            // Search tracks
+            function searchTracks(query) {
+                const allTracks = document.querySelectorAll('.track-item');
+                const searchTerm = query.toLowerCase();
+                
+                allTracks.forEach(trackEl => {
+                    const track = musicLibrary.find(t => t.id === trackEl.dataset.id);
+                    
+                    if (!track) return;
+                    
+                    const title = track.title.toLowerCase();
+                    const artist = track.artist.toLowerCase();
+                    const keywords = track.keywords.join(' ').toLowerCase();
+                    
+                    if (title.includes(searchTerm) || 
+                        artist.includes(searchTerm) || 
+                        keywords.includes(searchTerm)) {
+                        trackEl.style.display = '';
+                    } else {
+                        trackEl.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Setup filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.filter;
+                    filterTracks(category);
+                });
+            });
+            
+            // Setup search input
+            document.getElementById('searchInput').addEventListener('input', function() {
+                searchTracks(this.value);
+            });
+            
+            // Setup sortable for drag and drop
+            new Sortable(document.getElementById('selectedTracks'), {
+                animation: 150,
+                handle: '.handle',
+                onEnd: function() {
+                    updateSelectedMusicInSession();
+                }
+            });
+            
+            // Proceed button
+            document.getElementById('proceedBtn').addEventListener('click', function() {
+                // Check if at least one track is selected
+                if (sessionState.selected_music.length === 0) {
+                    alert('Please select at least one music track before proceeding.');
+                    return;
+                }
+                
+                // In a real app, this would redirect to the next step
+                alert('Proceeding to storyboard creation...');
+                // window.location.href = 'storyboard.html';
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    jsonOutput.textContent = JSON.stringify(sessionState, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+            
+            // Initialize the page
+            populateTrackLists();
+        });
+    </script>
+</body>
+</html>
