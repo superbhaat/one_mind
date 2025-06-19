@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Video Composition | One Mind</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Main Application Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- App Header with Progress Indicator -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Create Your Meditation</h1>
+            <div class="flex justify-center items-center space-x-1">
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-gray-700">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <div class="h-2 w-16 rounded-full bg-primary-600"></div>
+            </div>
+            <p class="mt-2 text-gray-400">Step 8: Final Video Composition</p>
+        </div>
+        
+        <!-- Final Video Composition Panel -->
+        <section class="bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h2 class="text-2xl font-semibold">Final Video Composition</h2>
+                
+                <div class="flex space-x-3">
+                    <button id="composeVideoBtn" class="bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center">
+                        <i class="fas fa-film mr-2"></i>
+                        <span>Compose Video</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Composition Progress -->
+            <div id="compositionProgress" class="hidden">
+                <div class="flex justify-between text-sm text-gray-400 mb-2">
+                    <span>Creating final video...</span>
+                    <span id="compositionPercent">0%</span>
+                </div>
+                <div class="bg-gray-700 h-2 rounded-full overflow-hidden mb-4">
+                    <div id="compositionProgressBar" class="bg-primary-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="text-center text-sm text-gray-400">
+                    <p id="compositionMessage">Preparing video segments...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video Preview and Options -->
+        <div id="videoComplete" class="hidden space-y-8">
+            <!-- YouTube Metadata Section -->
+            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6">YouTube Information</h2>
+                
+                <div class="space-y-6">
+                    <!-- Title Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Select Title</label>
+                        <div class="space-y-3">
+                            <div class="relative">
+                                <input type="radio" id="title1" name="title" class="hidden peer" checked>
+                                <label for="title1" class="block w-full p-3 bg-gray-700 border-2 border-transparent rounded-lg peer-checked:border-primary-500 peer-checked:bg-gray-600 cursor-pointer">
+                                    <span class="font-medium">🏔️ Peaceful Mountain Meditation | 15-Min Guided Session for Inner Calm</span>
+                                </label>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <input type="radio" id="title2" name="title" class="hidden peer">
+                                <label for="title2" class="block w-full p-3 bg-gray-700 border-2 border-transparent rounded-lg peer-checked:border-primary-500 peer-checked:bg-gray-600 cursor-pointer">
+                                    <span class="font-medium">✨ Mountain Serenity | A 15-Minute Meditation Journey for Relaxation & Peace</span>
+                                </label>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <input type="radio" id="title3" name="title" class="hidden peer">
+                                <label for="title3" class="block w-full p-3 bg-gray-700 border-2 border-transparent rounded-lg peer-checked:border-primary-500 peer-checked:bg-gray-600 cursor-pointer">
+                                    <span class="font-medium">🧘 15 Minutes of Mountain Calm | Guided Meditation for Inner Strength</span>
+                                </label>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div>
+                        <label for="videoDescription" class="block text-sm font-medium text-gray-400 mb-2">Video Description</label>
+                        <textarea id="videoDescription" rows="5" class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" readonly>Join this peaceful 15-minute mountain meditation designed to help you find inner calm and stability. This guided meditation uses visualization techniques to connect you with the unwavering strength of mountains.
+
+CHAPTERS:
+0:00 Introduction
+0:35 Breathing Focus
+1:42 Body Awareness
+2:54 Mountain Visualization
+4:30 Inner Stability
+6:10 Connecting with Nature
+7:45 Expanding Awareness
+9:20 Closing Reflection
+
+Voice: Serene
+Music: "Peaceful Ambience" by Serenity, "Ocean Waves" by Nature Sounds
+
+Created with One Mind Meditation Generator
+🎵 Music licensed from Envato Elements</textarea>
+                    </div>
+                    
+                    <!-- Thumbnail Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Select Thumbnail</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="relative">
+                                <input type="radio" id="thumb1" name="thumbnail" class="hidden peer" checked>
+                                <label for="thumb1" class="block overflow-hidden rounded-lg peer-checked:ring-2 peer-checked:ring-primary-500 cursor-pointer">
+                                    <img src="https://picsum.photos/seed/1/400/225" alt="Thumbnail option 1" class="w-full h-auto">
+                                </label>
+                                <div class="absolute right-2 top-2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle bg-gray-900 rounded-full"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <input type="radio" id="thumb2" name="thumbnail" class="hidden peer">
+                                <label for="thumb2" class="block overflow-hidden rounded-lg peer-checked:ring-2 peer-checked:ring-primary-500 cursor-pointer">
+                                    <img src="https://picsum.photos/seed/2/400/225" alt="Thumbnail option 2" class="w-full h-auto">
+                                </label>
+                                <div class="absolute right-2 top-2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle bg-gray-900 rounded-full"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <input type="radio" id="thumb3" name="thumbnail" class="hidden peer">
+                                <label for="thumb3" class="block overflow-hidden rounded-lg peer-checked:ring-2 peer-checked:ring-primary-500 cursor-pointer">
+                                    <img src="https://picsum.photos/seed/3/400/225" alt="Thumbnail option 3" class="w-full h-auto">
+                                </label>
+                                <div class="absolute right-2 top-2 text-primary-500 opacity-0 peer-checked:opacity-100">
+                                    <i class="fas fa-check-circle bg-gray-900 rounded-full"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="relative sm:col-span-3">
+                                <input type="radio" id="thumbCustom" name="thumbnail" class="hidden peer">
+                                <label for="thumbCustom" class="block h-32 overflow-hidden rounded-lg border-2 border-dashed border-gray-600 peer-checked:border-primary-500 cursor-pointer flex flex-col items-center justify-center">
+                                    <i class="fas fa-cloud-upload-alt text-2xl text-gray-500 mb-2"></i>
+                                    <span class="text-gray-400">Upload custom thumbnail</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Final Video Preview -->
+            <section class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6">Video Preview</h2>
+                
+                <div class="aspect-video bg-black rounded-lg overflow-hidden relative mb-4">
+                    <!-- Video placeholder -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <button id="playVideoBtn" class="w-16 h-16 rounded-full bg-primary-600/80 hover:bg-primary-500 flex items-center justify-center transition-colors text-2xl">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Video thumbnail -->
+                    <img src="https://picsum.photos/seed/1/1280/720" alt="Video thumbnail" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Export Options -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="export-btn bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg transition-colors inline-flex items-center space-x-2">
+                        <i class="fab fa-youtube text-red-500"></i>
+                        <span>Upload to YouTube</span>
+                    </button>
+                    
+                    <button class="export-btn bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg transition-colors inline-flex items-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>Download MP4</span>
+                    </button>
+                    
+                    <button class="export-btn bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg transition-colors inline-flex items-center space-x-2">
+                        <i class="fas fa-folder"></i>
+                        <span>Save Project</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Next Steps Section -->
+            <section class="bg-primary-800/30 rounded-xl p-6 shadow-lg border border-primary-700">
+                <h2 class="text-2xl font-semibold mb-4">Project Complete! 🎉</h2>
+                
+                <p class="text-gray-300 mb-6">Your meditation video has been successfully created. Here are some next steps:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-800/50 p-4 rounded-lg">
+                        <div class="text-primary-400 text-xl mb-2">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">Share Your Meditation</h3>
+                        <p class="text-sm text-gray-400">Upload to YouTube or share on social media to help others find peace.</p>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 p-4 rounded-lg">
+                        <div class="text-primary-400 text-xl mb-2">
+                            <i class="fas fa-folder-plus"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">Create a Series</h3>
+                        <p class="text-sm text-gray-400">Build a collection of meditations for different moods and needs.</p>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 p-4 rounded-lg">
+                        <div class="text-primary-400 text-xl mb-2">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">Collect Feedback</h3>
+                        <p class="text-sm text-gray-400">Ask listeners what they enjoy and how you can improve future meditations.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <button class="bg-primary-600 hover:bg-primary-500 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95">
+                        Start a New Meditation
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+            <a href="mixing.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+            <a href="index.html" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-colors transform hover:scale-105 active:scale-95 hidden" id="homeBtn">
+                Go Home <i class="fas fa-home ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- Debug Output - Hidden in Production -->
+        <div id="debugOutput" class="mt-8 p-4 bg-gray-800 rounded-lg hidden">
+            <h3 class="text-xl font-semibold mb-2">Session Data (JSON):</h3>
+            <pre id="jsonOutput" class="bg-gray-900 p-4 rounded overflow-x-auto text-xs"></pre>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center">
+        <div class="w-full max-w-4xl mx-4">
+            <div class="relative">
+                <button id="closeModal" class="absolute -top-12 right-0 text-white hover:text-gray-300">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <div class="aspect-video bg-black rounded-lg overflow-hidden relative">
+                    <!-- Video placeholder - in a real app, this would be a video element -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <div class="text-2xl mb-4">🎬 Video Preview</div>
+                        <div class="text-gray-400">In a real app, the final video would play here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Session state to store all meditation data
+            let sessionState = {
+                step: 8,
+                meditation_title: 'Peaceful Mountain Meditation',
+                theme: '',
+                length_minutes: 15,
+                visual_theme_description: '',
+                transcript: '',
+                claude_tokens_used: 0,
+                dalle_credits_used: 0,
+                runway_credits_used: 0,
+                elevenlabs_credits_used: 0,
+                selected_music: [],
+                ai_style: 'photorealistic',
+                storyboard: [],
+                motion_style: 'gentle',
+                seconds_per_scene: 24,
+                video_segments: [],
+                voice: {
+                    selected_voice: 'serene',
+                    speed_adjustment: 92,
+                    double_track: false,
+                    bass_resonance: false,
+                    volume_leveling: true,
+                    breathing_pauses: true,
+                    audio_url: '',
+                    duration_seconds: 0,
+                    is_generated: false
+                },
+                audio_mix: {
+                    voice_volume: 100,
+                    music_volume: 30,
+                    fade_in: 5,
+                    fade_out: 10,
+                    autoducking: true,
+                    enhance_clearness: true,
+                    is_mixed: false,
+                    voice_music_url: '',
+                    voice_only_url: '',
+                    music_only_url: ''
+                },
+                final_video: {
+                    is_composed: false,
+                    video_url: '',
+                    selected_title: '',
+                    selected_thumbnail: ''
+                }
+            };
+            
+            // Load existing session data
+            const savedSession = localStorage.getItem('meditationSession');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    // Merge with default session state
+                    sessionState = {...sessionState, ...data};
+                    
+                    // Check if we already have a composed video
+                    if (sessionState.final_video && sessionState.final_video.is_composed) {
+                        showVideoComplete();
+                    }
+                    
+                    updateDebugOutput();
+                } catch (e) {
+                    console.error('Error loading session data:', e);
+                }
+            }
+            
+            // Start video composition
+            document.getElementById('composeVideoBtn').addEventListener('click', startVideoComposition);
+            
+            // Start video composition process
+            function startVideoComposition() {
+                // Validate that we have mixed audio
+                if (!sessionState.audio_mix || !sessionState.audio_mix.is_mixed) {
+                    alert('Please mix audio first');
+                    return;
+                }
+                
+                // Validate that we have video segments
+                if (!sessionState.video_segments || sessionState.video_segments.length === 0) {
+                    alert('Please generate video segments first');
+                    return;
+                }
+                
+                // Show composition progress
+                document.getElementById('composeVideoBtn').disabled = true;
+                document.getElementById('composeVideoBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Composing...</span>';
+                document.getElementById('compositionProgress').classList.remove('hidden');
+                
+                // Reset progress bar
+                document.getElementById('compositionProgressBar').style.width = '0%';
+                document.getElementById('compositionPercent').textContent = '0%';
+                document.getElementById('compositionMessage').textContent = 'Preparing video segments...';
+                
+                // In a real app, this would call a video processing service
+                // For demo, simulate with timeouts
+                
+                // Step 1: Preparing
+                setTimeout(() => {
+                    document.getElementById('compositionProgressBar').style.width = '20%';
+                    document.getElementById('compositionPercent').textContent = '20%';
+                    document.getElementById('compositionMessage').textContent = 'Concatenating video segments...';
+                    
+                    // Step 2: Concatenating videos
+                    setTimeout(() => {
+                        document.getElementById('compositionProgressBar').style.width = '40%';
+                        document.getElementById('compositionPercent').textContent = '40%';
+                        document.getElementById('compositionMessage').textContent = 'Synchronizing audio with video...';
+                        
+                        // Step 3: Audio sync
+                        setTimeout(() => {
+                            document.getElementById('compositionProgressBar').style.width = '60%';
+                            document.getElementById('compositionPercent').textContent = '60%';
+                            document.getElementById('compositionMessage').textContent = 'Applying final processing...';
+                            
+                            // Step 4: Final processing
+                            setTimeout(() => {
+                                document.getElementById('compositionProgressBar').style.width = '80%';
+                                document.getElementById('compositionPercent').textContent = '80%';
+                                document.getElementById('compositionMessage').textContent = 'Generating video metadata...';
+                                
+                                // Step 5: Generate YouTube metadata
+                                setTimeout(() => {
+                                    document.getElementById('compositionProgressBar').style.width = '100%';
+                                    document.getElementById('compositionPercent').textContent = '100%';
+                                    document.getElementById('compositionMessage').textContent = 'Video composition complete!';
+                                    
+                                    // Complete composition
+                                    setTimeout(() => {
+                                        completeVideoComposition();
+                                    }, 1000);
+                                }, 1500);
+                            }, 2000);
+                        }, 1500);
+                    }, 1500);
+                }, 1000);
+            }
+            
+            // Complete video composition
+            function completeVideoComposition() {
+                // Update session state
+                sessionState.final_video.is_composed = true;
+                sessionState.final_video.video_url = 'https://example.com/final_video.mp4';
+                sessionState.final_video.selected_title = 'Peaceful Mountain Meditation | 15-Min Guided Session for Inner Calm';
+                sessionState.final_video.selected_thumbnail = '1';
+                
+                // Save session state
+                localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                updateDebugOutput();
+                
+                // Show video complete UI
+                showVideoComplete();
+            }
+            
+            // Show video complete UI
+            function showVideoComplete() {
+                // Hide composition progress
+                document.getElementById('compositionProgress').classList.add('hidden');
+                document.getElementById('composeVideoBtn').innerHTML = '<i class="fas fa-check mr-2"></i><span>Video Composed</span>';
+                document.getElementById('composeVideoBtn').className = 'bg-green-600 text-white px-6 py-2 rounded-lg inline-flex items-center cursor-default';
+                
+                // Show video complete section
+                document.getElementById('videoComplete').classList.remove('hidden');
+                
+                // Show home button
+                document.getElementById('homeBtn').classList.remove('hidden');
+            }
+            
+            // Video player modal
+            document.getElementById('playVideoBtn').addEventListener('click', function() {
+                document.getElementById('videoModal').classList.remove('hidden');
+            });
+            
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('videoModal').classList.add('hidden');
+            });
+            
+            // Title selection
+            document.querySelectorAll('input[name="title"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        sessionState.final_video.selected_title = this.nextElementSibling.textContent.trim();
+                        localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                        updateDebugOutput();
+                    }
+                });
+            });
+            
+            // Thumbnail selection
+            document.querySelectorAll('input[name="thumbnail"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        sessionState.final_video.selected_thumbnail = this.id.replace('thumb', '');
+                        localStorage.setItem('meditationSession', JSON.stringify(sessionState));
+                        updateDebugOutput();
+                    }
+                });
+            });
+            
+            // Export buttons
+            document.querySelectorAll('.export-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    alert(`In a real app, this would: ${action}`);
+                });
+            });
+            
+            // Debug helper to show JSON output
+            function updateDebugOutput() {
+                const jsonOutput = document.getElementById('jsonOutput');
+                if (jsonOutput) {
+                    // Don't show the full URLs to keep the debug output readable
+                    const debugData = {...sessionState};
+                    if (debugData.voice) {
+                        debugData.voice = {
+                            ...debugData.voice,
+                            audio_url: debugData.voice.audio_url ? '...' : ''
+                        };
+                    }
+                    if (debugData.audio_mix) {
+                        debugData.audio_mix = {
+                            ...debugData.audio_mix,
+                            voice_music_url: debugData.audio_mix.voice_music_url ? '...' : '',
+                            voice_only_url: debugData.audio_mix.voice_only_url ? '...' : '',
+                            music_only_url: debugData.audio_mix.music_only_url ? '...' : ''
+                        };
+                    }
+                    if (debugData.final_video) {
+                        debugData.final_video = {
+                            ...debugData.final_video,
+                            video_url: debugData.final_video.video_url ? '...' : ''
+                        };
+                    }
+                    jsonOutput.textContent = JSON.stringify(debugData, null, 2);
+                }
+            }
+            
+            // Show debug output in development mode
+            document.getElementById('debugOutput').classList.remove('hidden');
+            updateDebugOutput();
+        });
+    </script>
+</body>
+</html>
